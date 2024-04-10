@@ -1,6 +1,12 @@
 # CITS3403 Group Project
 
-(TODO)
+## Quick start
+
+```console
+$ pip install -r requirements.txt
+$ python server.py
+```
+
 # Key Features:
 ## Challenges and Requests:
 Users can post challenges for others to complete or respond to requests, earning points and recognition.
