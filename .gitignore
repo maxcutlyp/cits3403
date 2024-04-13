@@ -1,0 +1,15 @@
+#ignore .venv directory
+./.venv
+./venv
+/venv/
+/.venv/
+
+
+#ignore the database and instance directory
+/instance/*
+/instance
+*.db
+
+
+#Ignore specific file extensions
+*.pyc
