@@ -1,5 +1,5 @@
 import flask
-from models import db, User, Session, Request, Submission, Ranking
+from models import db, User, Session, Request, Submission
 
 app = flask.Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
