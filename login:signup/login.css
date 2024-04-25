@@ -1,0 +1,25 @@
+.vertical-buff{
+    margin-top: 100px;
+}
+.background{
+    background-color: #1E1E1E;
+}
+.text{
+    color: #C9C8B9;
+    font-family:Tahoma, sans-serif;
+}
+.box{
+    border-radius: 2%;
+    background: #8D3484;
+    border-color: #E9B023;
+}
+.input-box{
+    border-radius: 2%;
+    border: 0;
+}
+button{
+    background: #E9B023;
+    margin-top: 3px;
+    border: 0;
+    border-radius: 2%;
+}
