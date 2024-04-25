@@ -10,7 +10,7 @@ db = SQLAlchemy()
 class User(db.Model):
     # Schema: [ userId | username | email | site-wide score | password (hashed) ]
     id = db.Column(db.Integer, primary_key=True) #UserId, Primary key, TODO: Add the keyword making this incremental, so it does not need to be set each time.
-    username = db.Column(db.String(64), primary_key=True index=True, unique=True) #Username: Max size of 64, one per user
+    username = db.Column(db.String(64), primary_key=True, index=True, unique=True) #Username: Max size of 64, one per user
     email = db.Column(db.String(120), index=True, unique=True)
     total_points = db.Column(db.Integer, default=0)
     hashed_password = db.Column(db.String(128))
