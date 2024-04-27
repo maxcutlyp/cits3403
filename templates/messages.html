@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Messages</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <link rel="stylesheet" href="/static/messages.css">
+    </head>
+    <body>
+        <div class="sidebar">
+            <h1>Messages</h1>
+            <div class="items">
+                {% for message in recents %}
+                    <a
+                        href="{{ message['username'] }}"
+                        class="{% if message['username'] == selected %} selected {% endif %}"
+                    >
+                        <h2>{{ message['username'] }}</h2>
+                        <p>{{ message['preview'] }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="messages-wrapper">
+            {% if messages is none %}
+                <p class="empty-notifier">No conversation selected.</p>
+            {% else %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <p {% if message['incoming'] %} data-incoming {% else %} data-outgoing {% endif %}>
+                        <span>{{ message['contents'] }}</span>
+                    </p>
+                    {% endfor %}
+                </div>
+                <div class="message-controls">
+                    <input type="text" id="message-input" placeholder="Message...">
+                    <input type="button" id="attach-btn" value="Attach">
+                    <input type="button" id="send-btn" value="Send">
+                </div>
+            {% endif %}
+        </div>
+    </body>
+</html>
+

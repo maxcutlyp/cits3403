@@ -1,0 +1,118 @@
+/* TEMP: accent colors; can be changed later */
+:root {
+    --accent-primary: #8D3484;
+    --accent-secondary: color-mix(in hsl, Canvas, grey 20%);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --accent-primary: #cf7dc7;
+    }
+}
+
+/* TODO: add these resets to global style */
+:root {
+    font-family: system-ui;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    display: grid;
+    grid-template-columns: 25% 1fr;
+}
+
+.sidebar > h1 {
+    padding: 1rem 1rem;
+    border-block-end: 1px solid grey;
+}
+
+.sidebar {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border-inline-end: 1px solid grey;
+}
+
+.sidebar > .items {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: currentColor;
+    padding-block: 0.5em;
+    padding-inline: 1rem;
+}
+
+.sidebar a > p {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    opacity: .8;
+}
+
+.sidebar .selected {
+    background-color: var(--accent-secondary);
+}
+
+
+.messages-wrapper {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+}
+
+.messages {
+    overflow-y: auto;
+    display: flex;
+    gap: 0.5em;
+    padding: 2em;
+    flex-direction: column-reverse;
+}
+
+.messages p {
+    border-radius: 0.5em;
+    padding: 0.5em;
+    max-width: 60%;
+}
+
+.messages p[data-incoming] {
+    align-self: start;
+    background-color: var(--accent-secondary);
+}
+
+.messages p[data-outgoing] {
+    align-self: end;
+    background-color: var(--accent-primary);
+    color: Canvas;
+}
+
+.message-controls {
+    border-block-start: 1px solid grey;
+    padding: 0.5em;
+    display: flex;
+    gap: 0.5em;
+}
+
+.message-controls * {
+    padding: 1em;
+    border-radius: 0.5em;
+    border: none;
+    background-color: var(--accent-secondary);
+}
+
+#message-input {
+    flex-grow: 1;
+}
+
+.empty-notifier {
+    place-self: center;
+}
