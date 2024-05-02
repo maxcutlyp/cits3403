@@ -5,7 +5,12 @@
         <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
-        <h1>Hello, world!</h1>
+        <h1>Hello, {{ current_user.display_name or 'world' }}!</h1>
         <p>Welcome to our CITS3403 project.</p>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <p>Please <a href="{{ url_for('login') }}">sign in</a>.</p>
+        {% endif %}
     </body>
 </html>

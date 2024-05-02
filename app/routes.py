@@ -1,11 +1,63 @@
 import flask
+from flask_login import login_user, logout_user, login_required, current_user
 
-from . import app, db
+from . import app, db, login
 from .models import User, Session, Request, Submission
+from .forms import LoginForm, SignupForm
 
 @app.route('/')
 def index():
     return flask.render_template('index.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is None or not user.check_password(form.password.data):
+            # incorrect password - TODO: tell user
+            return flask.redirect(flask.url_for('login'))
+
+        login_user(user)
+
+        # TODO: "next" param (like in flask-login docs)
+        return flask.redirect(flask.url_for('index'))
+
+    return flask.render_template('login.html', form=form)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = SignupForm()
+
+    if form.validate_on_submit():
+        if User.query.filter_by(email=form.email.data).first():
+            # email already exists - TODO: tell user
+            return flask.redirect(flask.url_for('signup'))
+
+        user = User(
+            email=form.email.data,
+            display_name=form.display_name.data,
+        )
+        user.set_password(form.password.data)
+
+        db.session.add(user)
+        db.session.commit()
+
+        login_user(user)
+
+        # TODO: "next" param
+        return flask.redirect(flask.url_for('index'))
+
+    return flask.render_template('signup.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+
+    # TODO: "next" param
+    return flask.redirect(flask.url_for('index'))
 
 @app.route('/messages/')
 def route_messages_blank():

@@ -10,18 +10,29 @@
             </div>
             <div class = "container box border w-50 p-3">
                 <p class = "text-center text">Signup</p>
-                <div class = "container align-items-center">
-                    <label class = "text">Email:</label><br>
-                    <input type="email" class = "container input-box"><br>
-                    <label class = "text">Username:</label><br>
-                    <input type="text" class = "container input-box"><br>
-                    <label class = "text">Password:</label><br>
-                    <input type="password" class = "container input-box" id="pass1"><br>
-                    <label class = "text">Confirm password:</label><br>
-                    <input type="password" class = "container input-box" id="pass2"><br>
-                    <button onclick="passconfirm()">Confirm</button>
-                    <p class = "text">Login <a href="https://www.youtube.com/watch?v=sUoZMmzjw6s&t=11481s">here!</a> </p>
-                </div>
+                <form name="signup" action="" method="POST" class = "container align-items-center">
+                    {{ form.hidden_tag() }}
+                    {{ form.email.label(class_='text') }}
+                    <br>
+                    {{ form.email(class_='container input-box') }}
+                    <br>
+                    {{ form.display_name.label(class_='text') }}
+                    <br>
+                    {{ form.display_name(class_='container input-box') }}
+                    <br>
+                    {{ form.password.label(class_='text') }}
+                    <br>
+                    {{ form.password(class_='container input-box', id='pass1') }}
+                    <br>
+                    {{ form.password_confirm.label(class_='text') }}
+                    <br>
+                    {{ form.password_confirm(class_='container input-box', id='pass2') }}
+                    <br>
+                    {# TODO: bring back passconfirm() - I'm thinking on a
+                       focusout event on one or both of the password inputs #}
+                    {{ form.submit() }}
+                    <p class = "text">Login <a href="{{ url_for('login') }}">here!</a> </p>
+                </form>
             </div>
         </div>
     </body>
