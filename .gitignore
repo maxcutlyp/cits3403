@@ -13,3 +13,6 @@
 
 #Ignore specific file extensions
 *.pyc
+
+# OS
+.DS_Store

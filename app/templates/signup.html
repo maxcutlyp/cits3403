@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/login.css">
+    </head>
+    <body class = "background">
+        <div class = "container align-items-center h-50 align-middle vertical-buff">
+            <div>
+                <p class = "text-center text">[name of website here]</p>
+            </div>
+            <div class = "container box border w-50 p-3">
+                <p class = "text-center text">Signup</p>
+                <form name="signup" action="" method="POST" class = "container align-items-center">
+                    {{ form.hidden_tag() }}
+                    {{ form.email.label(class_='text') }}
+                    <br>
+                    {{ form.email(class_='container input-box') }}
+                    <br>
+                    {{ form.display_name.label(class_='text') }}
+                    <br>
+                    {{ form.display_name(class_='container input-box') }}
+                    <br>
+                    {{ form.password.label(class_='text') }}
+                    <br>
+                    {{ form.password(class_='container input-box', id='pass1') }}
+                    <br>
+                    {{ form.password_confirm.label(class_='text') }}
+                    <br>
+                    {{ form.password_confirm(class_='container input-box', id='pass2') }}
+                    <br>
+                    {# TODO: bring back passconfirm() - I'm thinking on a
+                       focusout event on one or both of the password inputs #}
+                    {{ form.submit() }}
+                    <p class = "text">Login <a href="{{ url_for('login') }}">here!</a> </p>
+                </form>
+            </div>
+        </div>
+    </body>
+</html> 
