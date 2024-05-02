@@ -2,12 +2,13 @@ import flask
 from flask_login import login_user, logout_user, login_required, current_user
 
 from . import app, db, login
-from .models import User, Session, Request, Submission
+from .models import User, Session, Image
 from .forms import LoginForm, SignupForm
 
 @app.route('/')
 def index():
     return flask.render_template('index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -111,3 +112,30 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a hendrerit tell
         messages=messages, # Note: most recent messages first
         selected=username,
     )
+
+@app.route('/gallery/<int:artistID>')
+def gallery(artistID):
+    images = Image.query.filter_by(artist_id=artistID).all()
+    artist = User.query.get(artistID)
+
+    if not artist:
+        return "Artist not found", 404
+    return flask.render_template('gallery.html', images=images, artist=artist)
+
+# Function for populating a new database with initial values for testing
+@app.route('/debuginit')
+def debuginit():
+    # Creating a new user
+    artist = User(display_name='Enth', email='sig@howeville.com', artist_title="Computer Scientist & Digital Artist", artist_description="Hacker, Artist, Mango Enthusiast.\n An egotistical loser who uses himself as a debug example on a CITS project.\n Has no friends.")
+    db.session.add(artist)
+    db.session.commit()
+
+    # Adding images for the user
+    image1 = Image(image_path='imgs/society.jpg', title='N-Bracket Comic', description='A reflection upon society.\n Lorem Ipsum Text here.', artist_id=artist.id)
+    image2 = Image(image_path='imgs/dogdog.png', title='dogdog', description='It\'s DogDog!', artist_id=artist.id)
+
+    db.session.add(image1)
+    db.session.add(image2)
+    db.session.commit()
+
+    return "done!"

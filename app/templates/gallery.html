@@ -5,20 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artist Gallery</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<<<<<<< HEAD:templates/gallery.html
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
-=======
-    <link rel="stylesheet" href="/static/gallery.css">
->>>>>>> 2b9556ce21d21a293e9c5cc3c3133614f645d38b:app/templates/gallery.html
 </head>
 <body>
 
     <div id="sidebar">
         <a href="/" class="back-home">Back to homepage</a>
         <div class="profile-picture">
-            <img src="{{ url_for('static', filename='images/profiles/' +  artist.id|string  + '.jpg' ) }}">
+            <img src="{{ url_for('static', filename='imgs/profiles/' +  artist.id|string  + '.jpg' ) }}">
         </div>
-        <h2>{{ artist.username }}</h2>
+        <h2>{{ artist.display_name }}</h2>
         <h4>{{ artist.artist_title }}</h4>
         <p>{{ artist.artist_description }}</p>
     </div>
@@ -28,242 +25,15 @@
         <div class="gallery" id="offersGallery">
             {% for image in images %}
             <div class="image-container">
-<<<<<<< HEAD:templates/gallery.html
                 <img id="{{ image.id }}" src="{{ url_for('static', filename=image.image_path) }}" alt="{{ image.title }}" class="offer img-fluid">
             </div>
             {% endfor %}
-=======
-                <img id="1" src="/static/imgs/ExampleAI1.webp" alt="Offer Image" class="offer">
-            </div>
-            <!--TODO: Image should fill on height, and not be limited by width at all. -->
-            <div class="image-container">
-                <img id="1" src="/static/imgs/ExampleAI2.webp" alt="Offer Image" class="offer">
-            </div>
-
->>>>>>> 2b9556ce21d21a293e9c5cc3c3133614f645d38b:app/templates/gallery.html
         </div>
         <h2>Art Gallery</h2>
         <div class="gallery" id="imagesGallery">
             {% for image in images %}
             <div class="image-container">
-<<<<<<< HEAD:templates/gallery.html
                 <img id="{{ image.id }}" src="{{ url_for('static', filename=image.image_path) }}" class="img-fluid" alt="{{ image.title }}">
-=======
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI1.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI1.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI1.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI1.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI1.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI1.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI1.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/society.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI1.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI1.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/ExampleAI2.webp" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/dogdog.png" class="img-fluid" alt="Art Image" class="art">
-            </div>
-            <div class="image-container">
-                <img id="0" src="/static/imgs/Circe.jpg" class="img-fluid" alt="Art Image" class="art">
->>>>>>> 2b9556ce21d21a293e9c5cc3c3133614f645d38b:app/templates/gallery.html
             </div>
             {% endfor %}
         </div>
