@@ -1,11 +1,7 @@
 import flask
-from models import db, User, Session, Request, Submission
 
-app = flask.Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db.init_app(app)
+from . import app, db
+from .models import User, Session, Request, Submission
 
 @app.route('/')
 def index():
@@ -63,8 +59,3 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a hendrerit tell
         messages=messages, # Note: most recent messages first
         selected=username,
     )
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Create tables in database if they don't exist
-    app.run()

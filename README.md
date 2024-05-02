@@ -4,7 +4,7 @@
 
 ```console
 $ pip install -r requirements.txt
-$ python server.py
+$ flask run
 ```
 
 # Key Features:
