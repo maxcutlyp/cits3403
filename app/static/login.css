@@ -17,9 +17,13 @@
     border-radius: 2%;
     border: 0;
 }
-button{
+input[type="submit"] {
     background: #E9B023;
     margin-top: 3px;
     border: 0;
     border-radius: 2%;
+}
+.error {
+    background-color: red;
+    font-weight: bold;
 }
