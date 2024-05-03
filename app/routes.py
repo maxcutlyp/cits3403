@@ -32,7 +32,7 @@ def signup():
 
     if form.validate_on_submit():
         if User.query.filter_by(email=form.email.data).first():
-            # email already exists - TODO: tell user
+            flask.session['last_err'] = f'Email "{form.email.data}" is already taken.'
             return flask.redirect(flask.url_for('signup'))
 
         user = User(
@@ -49,7 +49,8 @@ def signup():
         # TODO: "next" param
         return flask.redirect(flask.url_for('index'))
 
-    return flask.render_template('signup.html', form=form)
+    error = flask.session.pop('last_err', None)
+    return flask.render_template('signup.html', form=form, error=error)
 
 @app.route('/logout')
 @login_required

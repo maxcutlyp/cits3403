@@ -9,6 +9,9 @@
                 <p class = "text-center text">[name of website here]</p>
             </div>
             <div class = "container box border w-50 p-3">
+                {% if error %}
+                    <p class="error">{{ error }}</p>
+                {% endif %}
                 <p class = "text-center text">Signup</p>
                 <form name="signup" action="" method="POST" class = "container align-items-center">
                     {{ form.hidden_tag() }}
