@@ -58,3 +58,15 @@ class Submission(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #UserId, Foreign key, corresponding to user table
     content = db.Column(db.Text) # Content of a submission
     ranking = db.Column(db.Integer) #TODO: Make unique with request ID
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_from = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_to = db.Column(db.Integer, db.ForeignKey('user.id'))
+    timestamp = db.Column(db.DateTime, nullable=False)
+    text_content = db.Column(db.Text, nullable=False)
+    # TODO: attachments e.g. images
+
+    __table_args__ = (
+        db.CheckConstraint('user_from != user_to'),
+    )

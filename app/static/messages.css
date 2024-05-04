@@ -75,7 +75,7 @@ body {
     display: flex;
     gap: 0.5em;
     padding: 2em;
-    flex-direction: column-reverse;
+    flex-direction: column-reverse; /* to default the scroll position to the bottom */
 }
 
 .messages p {
