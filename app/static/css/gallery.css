@@ -74,6 +74,22 @@ body {
     transform: scale(1.05);
 }
 
+.carousel-container {
+    display: flex; /* Aligns slides in a row */
+    overflow-x: hidden; /* Hides anything outside this container */
+    width: 100%; /* Adjust width as needed */
+}
+.slide {
+    flex-shrink: 0; /* Prevents slides from shrinking */
+    width: 100%; /* Each slide takes full width of the container */
+    transition: transform 0.5s ease; /* Smooth transition for the transform */
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 
 /* Responsive adjustments for different screen sizes */
 @media (max-width: 1000px) {

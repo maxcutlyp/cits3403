@@ -22,13 +22,41 @@
 
     <div class="gallery-container">
         <h2>Offers</h2>
-        <div class="gallery" id="offersGallery">
+        <!-- The container for the offer carousel -->
+        <div class="carousel-container">
             {% for image in images %}
-            <div class="image-container">
-                <img id="{{ image.id }}" src="{{ url_for('static', filename=image.image_path) }}" alt="{{ image.title }}" class="offer img-fluid">
+            <!-- Each image should be wrapped in a single slide div -->
+            <div class="slide">
+                <img src="{{ url_for('static', filename=image.image_path) }}" alt="{{ image.title }}">
             </div>
             {% endfor %}
         </div>
+
+  <script>
+    const carouselContainer = document.querySelector(".carousel-container");
+    const slides = [...document.querySelectorAll(".slide")];
+    let currentSlideIndex = 0;
+
+    function nextSlide() {
+        currentSlideIndex = (currentSlideIndex + 1) % slides.length; // Move to the next slide
+        const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
+        slides.forEach(slide => slide.style.transform = translateValue);
+    }
+
+    function prevSlide() {
+        currentSlideIndex = currentSlideIndex > 0 ? currentSlideIndex - 1 : slides.length - 1; // Move to the previous slide
+        const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
+        slides.forEach(slide => slide.style.transform = translateValue);
+    }
+    </script>
+        <!-- Add the arrow buttons for navigation -->
+<button id="left-arrow" onclick="prevSlide();"><</button>
+<button id="right-arrow" onclick="nextSlide();">></button>
+        <!-- JavaScript to manage the carousel navigation -->
+
+
+
+
         <h2>Art Gallery</h2>
         <div class="gallery" id="imagesGallery">
             {% for image in images %}
