@@ -1,9 +1,10 @@
 import flask
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_socketio import send, join_room
 
 import datetime
 
-from . import app, db, login
+from . import app, db, login, socketio
 from .models import User, Session, Request, Submission, Message
 from .forms import LoginForm, SignupForm
 
@@ -90,6 +91,15 @@ def route_messages(user_id: int | None):
     else:
         messages_processed = None
 
+    return flask.render_template(
+        'messages.html',
+        recents=get_recents_processed(),
+        messages=messages_processed,
+        selected=user_id,
+    )
+
+@login_required
+def get_recents_processed():
     # SELECT user_from, user_to, MAX(timestamp) AS timestamp, text_content
     # FROM Message
     # WHERE user_from=$(current_user.id) OR user_to=$(current_user.id)
@@ -129,7 +139,7 @@ def route_messages(user_id: int | None):
         seen_pairs.add((message.user_to, message.user_from))
         i += 1
 
-    recents_processed = [
+    return [
         {
             'user_id': (other_user_id := ({ message.user_from, message.user_to } - { current_user.id }).pop()),
             'display_name': User.query.get(other_user_id).display_name,
@@ -138,27 +148,58 @@ def route_messages(user_id: int | None):
         for message in recents
     ]
 
+@app.route('/components/messages-sidebar')
+@login_required
+def messages_sidebar():
+    try:
+        selected = int(flask.request.args['selected'])
+    except (KeyError, ValueError):
+        selected = None
+
     return flask.render_template(
-        'messages.html',
-        recents=recents_processed,
-        messages=messages_processed,
-        selected=user_id,
+        'components/messages-sidebar.html',
+        recents=get_recents_processed(),
+        selected=selected,
     )
 
-@app.route('/messages/<int:user_id>/send', methods=['POST'])
+@socketio.on('connect')
 @login_required
-def send_message(user_id: int):
-    # TODO: This will be a websocket message rather than a HTTP endpoint eventually
-    # Not particularly worried about error handling here yet for that reason.
+def ws_connect():
+    join_room(current_user.id)
 
+@socketio.on('json')
+@login_required
+def ws_json(data: dict, *args):
+    user_to = data.get('to', None)
+    message = data.get('message', None)
+
+    if user_to is None or message is None:
+        print(f'Got unknown json data from socket: {data}')
+        return
+
+    send_message(user_to, message)
+
+@login_required
+def send_message(user_id: int, text_content: str):
     message = Message(
         user_from=current_user.id,
         user_to=user_id,
-        timestamp=flask.request.date or datetime.datetime.now(),
-        text_content=flask.request.json['message']
+        timestamp=datetime.datetime.now(),
+        text_content=text_content,
+    )
+
+    send(
+        {
+            'from': {
+                'id': current_user.id,
+                'display_name': current_user.display_name,
+            },
+            'message': text_content,
+        },
+        json=True,
+        room=user_id,
     )
 
     db.session.add(message)
     db.session.commit()
 
-    return 'message sent', 200

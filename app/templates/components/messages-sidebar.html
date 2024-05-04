@@ -1,0 +1,11 @@
+<div class="items" id="messages-sidebar">
+    {% for message in recents %}
+        <a
+            href="{{ message['user_id'] }}"
+            class="{% if message['user_id'] == selected %} selected {% endif %}"
+        >
+            <h2>{{ message['display_name'] }}</h2>
+            <p>{{ message['preview'] }}</p>
+        </a>
+    {% endfor %}
+</div>
