@@ -4,6 +4,7 @@
         <title>Messages</title>
         <link rel="stylesheet" href="/static/style.css">
         <link rel="stylesheet" href="/static/messages.css">
+        <script src="/static/messages.js"></script>
     </head>
     <body>
         <div class="sidebar">
@@ -11,10 +12,10 @@
             <div class="items">
                 {% for message in recents %}
                     <a
-                        href="{{ message['username'] }}"
-                        class="{% if message['username'] == selected %} selected {% endif %}"
+                        href="{{ message['user_id'] }}"
+                        class="{% if message['user_id'] == selected %} selected {% endif %}"
                     >
-                        <h2>{{ message['username'] }}</h2>
+                        <h2>{{ message['display_name'] }}</h2>
                         <p>{{ message['preview'] }}</p>
                     </a>
                 {% endfor %}
