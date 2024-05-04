@@ -5,21 +5,12 @@
         <link rel="stylesheet" href="/static/style.css">
         <link rel="stylesheet" href="/static/messages.css">
         <script src="/static/messages.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     </head>
     <body>
         <div class="sidebar">
             <h1>Messages</h1>
-            <div class="items">
-                {% for message in recents %}
-                    <a
-                        href="{{ message['user_id'] }}"
-                        class="{% if message['user_id'] == selected %} selected {% endif %}"
-                    >
-                        <h2>{{ message['display_name'] }}</h2>
-                        <p>{{ message['preview'] }}</p>
-                    </a>
-                {% endfor %}
-            </div>
+            {% include 'components/messages-sidebar.html' %}
         </div>
         <div class="messages-wrapper">
             {% if messages is none %}

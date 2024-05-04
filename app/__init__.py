@@ -2,6 +2,7 @@ import flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_socketio import SocketIO
 
 import os
 
@@ -17,6 +18,7 @@ except KeyError:
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+socketio = SocketIO(app)
 
 login = LoginManager(app)
 login.login_view = 'login'
