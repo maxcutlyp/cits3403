@@ -19,9 +19,9 @@
 }
 
 .heading a {
+    padding: 50px 40px 0px 0px;
     float: right;
-    padding-right: 50px;
-    padding-top: 50px;
+    right: 100px;
 }
 
 .sidebar {
@@ -38,27 +38,60 @@
 }
 
 .sidebar label {
-    padding: 6px 8px 6px 16px;
+    padding: 30px 0px 0px 16px;
     text-decoration: none;
     font-size: 30px;
     display: block;
-    padding-top: 30px;
 }
 
 .sidebar li {
-    padding: 6px 8px 6px 16px;
+    padding: 5px 8px 6px 16px;
     text-decoration: none;
     font-size: 16px;
     display: block;
 }
 
 .sidebar form {
-    padding-left: 20px;
-} 
+    padding: 10px 0px 0px 20px;
+}
 
-.title {
-    margin-left: 20px;
-    padding: 0px 10px;
+.grid {
+    padding: 150px 0px 0px 330px;
+    display: grid;
+    width: 600px;
+    grid-template-columns: 400px 400px 400px;
+    column-gap: 20px;
+    row-gap: 20px;
+}
+
+.offer {
+    height: 350px;
+    box-sizing: border-box;
+    background-color: #cbcbcb;
+}
+
+.offer h3 {
+    padding: 0px 0px 0px 10px;
+    display: inline;
+    font-size: 20px;
+}
+
+.offer p.description {
+    padding: 0px 0px 0px 10px;
+    color: #000000;
+}
+
+.offer img {
+    width: 200px;
+    height: 200px;
+    padding-left: 20px;
+}
+
+.offer p.price {
+    padding: 0px 0px 0px 10px;
+    vertical-align: bottom;
+    text-align: left;
+    font-size: 10px;
 }
 
 .background{
