@@ -2,10 +2,6 @@
     color-scheme: light dark;
 }
 
-#content {
-    display: flex;
-}
-
 body, html {
     margin: 0;
     padding: 0;

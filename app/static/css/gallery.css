@@ -1,3 +1,6 @@
+#content {
+    display: flex;
+}
 
 #sidebar {
     position: sticky;
