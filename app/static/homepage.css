@@ -1,5 +1,5 @@
 .heading {
-    height: 120px;
+    height: 80px;
     width: 100%;
     position: fixed;
     z-index: 2;
@@ -13,20 +13,20 @@
 
 .heading title {
     display: inline-block;
-    font-size: 50px;
-    padding-top: 25px;
+    font-size: 40px;
+    padding-top: 15px;
     padding-left: 20px;
 }
 
 .heading a {
-    padding: 50px 40px 0px 0px;
+    padding: 30px 40px 0px 0px;
     float: right;
     right: 100px;
 }
 
 .sidebar {
     height: 100%;
-    width: 300px;
+    width: 15%;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -34,64 +34,67 @@
     background-color: #111312;
     overflow-x: hidden;
     padding-top: 100px;
+    padding-left: 16px;
     color: #cbcbcb;
 }
 
 .sidebar label {
-    padding: 30px 0px 0px 16px;
+    padding: 30px 0px 0px 0px;
     text-decoration: none;
     font-size: 30px;
     display: block;
 }
 
 .sidebar li {
-    padding: 5px 8px 6px 16px;
+    padding: 5px 8px 6px 0px;
     text-decoration: none;
     font-size: 16px;
     display: block;
 }
 
 .sidebar form {
-    padding: 10px 0px 0px 20px;
+    padding: 10px 0px 0px 0px;
+}
+
+.sidebar input {
+    padding: 2px 5px 2px 5px;
 }
 
 .grid {
-    padding: 150px 0px 0px 330px;
+    padding: 150px 0px 0px 20%;
     display: grid;
-    width: 600px;
-    grid-template-columns: 400px 400px 400px;
-    column-gap: 20px;
+    width: 60%;
+    grid-template-columns: 40% 40% 40%;
+    column-gap: 2%;
     row-gap: 20px;
 }
 
 .offer {
-    height: 350px;
     box-sizing: border-box;
     background-color: #cbcbcb;
 }
 
-.offer h3 {
+.offer b {
     padding: 0px 0px 0px 10px;
-    display: inline;
     font-size: 20px;
 }
 
 .offer p.description {
-    padding: 0px 0px 0px 10px;
+    padding: 0px 10px 0px 10px;
     color: #000000;
 }
 
 .offer img {
-    width: 200px;
-    height: 200px;
-    padding-left: 20px;
+    width: 50%;
+    height: 50%;
+    padding-left: 10px;
 }
 
 .offer p.price {
     padding: 0px 0px 0px 10px;
-    vertical-align: bottom;
+    vertical-align: top;
     text-align: left;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .background{
