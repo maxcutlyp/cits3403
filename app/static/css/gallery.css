@@ -2,8 +2,6 @@ body {
     display: flex;
 }
 
-/* Artist info sidebar */
-/* TODO: Make this not a sidebar on mobile... No seriously, this all needs some SERIOUS work on mobile. */
 #sidebar {
     position: fixed;
     top: 0; /* Stick to the top of the viewport */
@@ -174,10 +172,10 @@ body {
 }
 
 #enlargedImage {
-height: auto;
-max-height: 80%;
-max-width: 60%;
-object-fit: contain;
+    height: auto;
+    max-height: 80%;
+    max-width: 60%;
+    object-fit: contain;
 }
 
 

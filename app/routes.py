@@ -115,8 +115,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a hendrerit tell
         selected=username,
     )
 
+@app.route('/gallery/', defaults={'artistID': None})
 @app.route('/gallery/<int:artistID>')
 def gallery(artistID):
+    if artistID is None:
+        artistID = current_user.id
+
     images = Image.query.filter_by(artist_id=artistID).all()
     artist = User.query.get(artistID)
 
@@ -139,12 +143,12 @@ def upload_image():
             if filename != '':
                 try:
                     username = current_user.display_name
-                    folder_path = os.path.join('app/static/imgs/users/', username)
+                    folder_path = os.path.join('app/static/imgs/users/', current_user.id)
                     os.makedirs(folder_path, exist_ok=True)
                     image_file.save(os.path.join(folder_path, filename))
 
                     new_image = Image(
-                        image_path=os.path.join('imgs/users/', username, filename),
+                        image_path=os.path.join('imgs/users/', current_user.id, filename),
                         title=form.title.data,
                         description=form.description.data,
                         artist_id=current_user.id
@@ -166,4 +170,4 @@ def upload_image():
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'webp'}
