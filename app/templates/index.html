@@ -1,16 +1,106 @@
 <!DOCTYPE html>
+<!-- TODO: Change website name-->
 <html>
     <head>
-        <title>Hello, world!</title>
-        <link rel="stylesheet" href="/static/style.css">
+        <title>[Website Name]</title>
+        <link rel="stylesheet" href="/static/homepage.css">
     </head>
-    <body>
-        <h1>Hello, {{ current_user.display_name or 'world' }}!</h1>
-        <p>Welcome to our CITS3403 project.</p>
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('logout') }}">Logout</a>
-        {% else %}
-            <p>Please <a href="{{ url_for('login') }}">sign in</a>.</p>
-        {% endif %}
+    <body class="background">
+        <div class="heading">
+            <title>[Website Name]</title>
+            <!-- TODO: Change to redirect to profile instead of login if user is logged in, and reduce clickable area.-->
+            <a href="/login">Log In</a>
+        </div>
+
+        <div class="sidebar">
+            <!-- TODO: Add action for when sort is clicked-->
+            <label for="cars">Sort By:</label>
+            <form>
+                <select name="sort" id="sort">
+                    <option value="new">Date Added - Newest</option>
+                    <option value="old">Date Added - Oldest</option>
+                    <option value="cheap">Price - Low To High</option>
+                    <option value="expensive">Price - High To Low</option>
+                </select>
+                <!-- TODO: Add functionality for button-->
+                <div>
+                    <input type="submit" value="Sort">
+                </div>
+            </form>
+            
+            <label>Tags:</label>
+            <ul>
+                <li><input type="checkbox">Realism</li>
+                <li><input type="checkbox">Nature</li>
+                <li><input type="checkbox">Fanart</li>
+                <li><input type="checkbox">Digital</li>
+                <li><input type="checkbox">Painting</li>
+                <li><input type="checkbox">Still Life</li>
+                <li><input type="checkbox">Futuristic</li>
+                <li><input type="checkbox">Photorealism</li>
+                <li><input type="checkbox">Collage</li>
+                <li><input type="checkbox">Historical</li>
+                <li><input type="checkbox">Urban</li>
+            </ul>
+            <button class="tags">Update Tags</button>
+        </div>
+        <!-- TODO: Have the offers be grabbed from a database.-->
+        <div class="grid">
+            <!-- TODO: Offers don't expand vertically enough if window is too thin-->
+            <div class="offer">
+                <b>Offer 1:</b>
+                <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
+                <img src="/static/imgs/society.jpg">
+                <p class="price">$10.00</p>
+            </div>
+            <div class="offer">
+                <b>Offer 2:</b>
+                <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
+                <img src="/static/imgs/society.jpg">
+                <p class="price">$10.00</p>
+            </div>
+            <div class="offer">
+                <b>Offer 3:</b>
+                <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
+                <img src="/static/imgs/society.jpg">
+                <p class="price">$10.00</p>
+            </div>
+            <div class="offer">
+                <b>Offer 4:</b>
+                <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
+                <img src="/static/imgs/society.jpg">
+                <p class="price">$10.00</p>
+            </div>
+            <div class="offer">
+                <b>Offer 5:</b>
+                <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
+                <img src="/static/imgs/society.jpg">
+                <p class="price">$10.00</p>
+            </div>
+            <div class="offer">
+                <b>Offer 6:</b>
+                <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
+                <img src="/static/imgs/society.jpg">
+                <p class="price">$10.00</p>
+            </div>
+            <div class="offer">
+                <b>Offer 7:</b>
+                <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
+                <img src="/static/imgs/society.jpg">
+                <p class="price">$10.00</p>
+            </div>
+            <div class="offer">
+                <b>Offer 8:</b>
+                <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
+                <img src="/static/imgs/society.jpg">
+                <p class="price">$10.00</p>
+            </div>
+            <div class="offer">
+                <b>Offer 9:</b>
+                <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
+                <img src="/static/imgs/society.jpg">
+                <p class="price">$10.00</p>
+            </div>
+        </div>
     </body>
 </html>
