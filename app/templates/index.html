@@ -1,16 +1,44 @@
 <!DOCTYPE html>
+<!-- TODO: Change website name-->
 <html>
     <head>
-        <title>Hello, world!</title>
-        <link rel="stylesheet" href="/static/style.css">
+        <title>[Website Name]</title>
+        <link rel="stylesheet" href="/static/homepage.css">
     </head>
-    <body>
-        <h1>Hello, {{ current_user.display_name or 'world' }}!</h1>
-        <p>Welcome to our CITS3403 project.</p>
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('logout') }}">Logout</a>
-        {% else %}
-            <p>Please <a href="{{ url_for('login') }}">sign in</a>.</p>
-        {% endif %}
+    <body class="background">
+        <div class="heading">
+            <title>[Website Name]</title>
+            <!-- TODO: Change to have user's profile picture and to have it be a clickable-->
+            <img src="/static/imgs/test_profile_picture.jpg">
+        </div>
+
+        <div class="sidebar">
+            <!-- TODO: Add action for when update is clicked-->
+            <label for="cars">Sort By:</label>
+            <form action="">
+                <select name="sort" id="sort">
+                    <option value="new">Date Added - Newest</option>
+                    <option value="old">Date Added - Oldest</option>
+                    <option value="cheap">Price - Low To High</option>
+                    <option value="expensive">Price - High To Low</option>
+                </select>
+                <input type="submit" value="Sort">
+              </form>
+            
+            <label>Tags:</label>
+            <ul>
+                <li><input type="checkbox">Realism</li>
+                <li><input type="checkbox">Nature</li>
+                <li><input type="checkbox">Fanart</li>
+                <li><input type="checkbox">Digital</li>
+                <li><input type="checkbox">Painting</li>
+                <li><input type="checkbox">Still Life</li>
+                <li><input type="checkbox">Futuristic</li>
+                <li><input type="checkbox">Photorealism</li>
+                <li><input type="checkbox">Collage</li>
+                <li><input type="checkbox">Historical</li>
+                <li><input type="checkbox">Urban</li>
+            </ul>
+        </div>
     </body>
 </html>
