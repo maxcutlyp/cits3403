@@ -75,19 +75,44 @@ body {
 }
 
 .carousel-container {
-    display: flex; /* Aligns slides in a row */
-    overflow-x: hidden; /* Hides anything outside this container */
-    width: 100%; /* Adjust width as needed */
-}
-.slide {
-    flex-shrink: 0; /* Prevents slides from shrinking */
-    width: 100%; /* Each slide takes full width of the container */
-    transition: transform 0.5s ease; /* Smooth transition for the transform */
+    display: flex;
+    overflow-x: scroll;  /* Allows horizontal scrolling */
+    scroll-snap-type: x mandatory;
+    width: 80%;  /* Adjust as per your preference, ensures it doesn’t take the full screen width */
+    margin: auto;  /* Center the carousel if needed */
 }
 
-img {
-    max-width: 100%;
-    height: auto;
+.slide {
+    flex: 0 0 25%;  /* Adjust the width of each slide */
+    scroll-snap-align: start;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);  /* Optional: adds shadow for better visibility */
+    margin-right: 10px;  /* Space between slides */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1 / 1;  /* Ensures each slide is square */
+    position: relative;  /* Needed for absolute positioning of the image */
+    overflow: hidden;  /* Ensures images do not overflow their container */
+}
+.slide img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;  /* Ensures the image covers the width if it's too narrow */
+    min-height: 100%;  /* Ensures the image covers the height if it's too short */
+}
+
+/* Hide horizontal scrollbar */
+.carousel-container::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 

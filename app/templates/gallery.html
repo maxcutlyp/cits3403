@@ -32,27 +32,27 @@
             {% endfor %}
         </div>
 
-  <script>
-    const carouselContainer = document.querySelector(".carousel-container");
-    const slides = [...document.querySelectorAll(".slide")];
-    let currentSlideIndex = 0;
-
-    function nextSlide() {
-        currentSlideIndex = (currentSlideIndex + 1) % slides.length; // Move to the next slide
-        const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
-        slides.forEach(slide => slide.style.transform = translateValue);
-    }
-
-    function prevSlide() {
-        currentSlideIndex = currentSlideIndex > 0 ? currentSlideIndex - 1 : slides.length - 1; // Move to the previous slide
-        const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
-        slides.forEach(slide => slide.style.transform = translateValue);
-    }
-    </script>
-        <!-- Add the arrow buttons for navigation -->
-<button id="left-arrow" onclick="prevSlide();"><</button>
-<button id="right-arrow" onclick="nextSlide();">></button>
         <!-- JavaScript to manage the carousel navigation -->
+        <script>
+        const carouselContainer = document.querySelector(".carousel-container");
+        const slides = [...document.querySelectorAll(".slide")];
+        let currentSlideIndex = 0;
+
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length; // Move to the next slide
+            const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
+            slides.forEach(slide => slide.style.transform = translateValue);
+        }
+
+        function prevSlide() {
+            currentSlideIndex = currentSlideIndex > 0 ? currentSlideIndex - 1 : slides.length - 1; // Move to the previous slide
+            const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
+            slides.forEach(slide => slide.style.transform = translateValue);
+        }
+        </script>
+        <!-- Add the arrow buttons for navigation -->
+        <button id="left-arrow" onclick="prevSlide();"><</button>
+        <button id="right-arrow" onclick="nextSlide();">></button>
 
 
 
