@@ -2,17 +2,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h1>Hello, {{ current_user.display_name or 'world' }}!</h1>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <h1>Hello, {{ current_user.display_name or 'world' }}!</h1>
-        <br>
-        <p>Welcome to our CITS3403 project.</p>
+    <p>Welcome to our CITS3403 project.</p>
         {% if current_user.is_authenticated %}
             <a href="{{ url_for('logout') }}">Logout</a>
         {% else %}
