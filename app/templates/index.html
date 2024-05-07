@@ -8,8 +8,11 @@
     <body class="background">
         <div class="heading">
             <title>[Website Name]</title>
-            <!-- TODO: Change to redirect to profile instead of login if user is logged in, and reduce clickable area.-->
-            <a href="/login">Log In</a>
+            {% if current_user.is_authenticated %}
+                <a href="/messages">{{ current_user.display_name }}</a>
+            {% else %}
+                <a href="/login">Log In</a>
+            {% endif %}
         </div>
 
         <div class="sidebar">
