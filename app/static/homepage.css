@@ -19,9 +19,18 @@
 }
 
 .heading a {
-    padding: 30px 40px 0px 0px;
+    padding: 12px 20px 12px 20px;
+    margin: 18px 25px 0px 0px;
     float: right;
     right: 100px;
+    text-decoration: none;
+    color: currentColor;
+    background-color: #b7b7b7;
+    border-radius: 5px;
+}
+
+.heading a:hover {
+    background-color: #8e8e8e;
 }
 
 .sidebar {
@@ -72,6 +81,7 @@
 .offer {
     box-sizing: border-box;
     background-color: #cbcbcb;
+    border-radius: 5px;
 }
 
 .offer b {
@@ -99,5 +109,5 @@
 
 .background{
     background-color: #1E1E1E;
-    font-family: Calibri;
+    font-family: system-ui;
 }
