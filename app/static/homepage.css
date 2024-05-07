@@ -1,21 +1,25 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.page_grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    height: 100vh;
+}
+
 .heading {
     height: 80px;
-    width: 100%;
-    position: fixed;
-    z-index: 2;
-    top: 0;
-    left: 0;
     background-color: #cbcbcb;
-    overflow-x: hidden;
     text-align: left;
-    vertical-align: top;
+    grid-column: span 2;
 }
 
 .heading title {
     display: inline-block;
     font-size: 40px;
-    padding-top: 15px;
-    padding-left: 20px;
+    padding: 10px;
 }
 
 .heading a {
@@ -34,17 +38,12 @@
 }
 
 .sidebar {
-    height: 100%;
-    width: 15%;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
+    padding: 0.75rem;
+    display: grid;
     background-color: #111312;
-    overflow-x: hidden;
-    padding-top: 100px;
-    padding-left: 16px;
     color: #cbcbcb;
+    overflow-y: auto;
+    gap: 0.5rem;
 }
 
 .sidebar label {
@@ -69,42 +68,54 @@
     padding: 2px 5px 2px 5px;
 }
 
-.grid {
-    padding: 150px 0px 0px 20%;
+.sidebar button {
+    align-self: center;
+    justify-self: center;
+}
+
+.offer_grid {
+    padding-inline: 2rem;
+    padding-block: 2rem;
     display: grid;
-    width: 60%;
-    grid-template-columns: 40% 40% 40%;
+    grid-template-columns: 1fr 1fr 1fr;
     column-gap: 2%;
     row-gap: 20px;
+    overflow-y: auto;
 }
 
 .offer {
-    box-sizing: border-box;
+    display: grid;
     background-color: #cbcbcb;
     border-radius: 5px;
+    text-decoration: none;
+}
+
+.offer:hover {
+    background-color: #8e8e8e;
 }
 
 .offer b {
-    padding: 0px 0px 0px 10px;
+    padding: 0.5rem;
     font-size: 20px;
+    color: #000000;
 }
 
 .offer p.description {
-    padding: 0px 10px 0px 10px;
+    padding: 0.5rem;
     color: #000000;
 }
 
 .offer img {
-    width: 50%;
-    height: 50%;
-    padding-left: 10px;
+    max-width: 100%;
+    padding: 0.5rem;
 }
 
 .offer p.price {
-    padding: 0px 0px 0px 10px;
-    vertical-align: top;
-    text-align: left;
+    padding: 0.5rem;
+    text-align: right;
     font-size: 12px;
+    font-weight: 500;
+    color: #000000;
 }
 
 .background{
