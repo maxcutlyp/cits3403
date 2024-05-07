@@ -90,6 +90,7 @@ def route_messages(user_id: int | None):
             }
             for message in messages
         ]
+
     else:
         messages_processed = None
 
@@ -141,7 +142,7 @@ def get_recents_processed():
         seen_pairs.add((message.user_to, message.user_from))
         i += 1
 
-    return [
+    recent_data = [
         {
             'user_id': (other_user_id := ({ message.user_from, message.user_to } - { current_user.id }).pop()),
             'display_name': User.query.get(other_user_id).display_name,
@@ -149,6 +150,16 @@ def get_recents_processed():
         }
         for message in recents
     ]
+
+    for data in recent_data:
+        for time in recents:
+            if time[1] == data['user_id']:
+                data['time'] = time[2]
+    
+    print(recents)
+    print(recent_data)
+
+    return recent_data
 
 @app.route('/components/messages-sidebar')
 @login_required
