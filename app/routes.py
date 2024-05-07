@@ -19,7 +19,8 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None or not user.check_password(form.password.data):
-            # incorrect password - TODO: tell user
+            flask.session['last_err'] = f'Incorrect username or password.'
+            flask.flash('Invalid username or password', 'error')
             return flask.redirect(flask.url_for('login'))
 
         login_user(user)
@@ -27,7 +28,8 @@ def login():
         # TODO: "next" param (like in flask-login docs)
         return flask.redirect(flask.url_for('index'))
 
-    return flask.render_template('login.html', form=form)
+    error = flask.session.pop('last_err', None)
+    return flask.render_template('login.html', form=form, error=error)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
