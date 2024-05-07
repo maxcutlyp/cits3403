@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_socketio import send, join_room
 
 import datetime
+import time
 
 from . import app, db, login, socketio
 from .models import User, Session, Request, Submission, Message
@@ -150,14 +151,27 @@ def get_recents_processed():
         }
         for message in recents
     ]
-
-    for data in recent_data:
-        for time in recents:
-            if time[1] == data['user_id']:
-                data['time'] = time[2]
     
-    print(recents)
-    print(recent_data)
+    curr_time = datetime.datetime.now()
+    for data in recent_data:
+        for user_specific_time in recents:
+            if user_specific_time[1] == data['user_id']:
+                date_and_time = user_specific_time[2]
+                epoch_time = date_and_time.timestamp()
+                time_diff = time.time() - epoch_time
+                if curr_time.year == date_and_time.year:
+                    if curr_time.day == date_and_time.day:
+                        if time_diff < 3600:
+                            if time_diff < 60: # Within the last minute
+                                data['time'] = "now"
+                            else: # Within the last hour
+                                data['time'] = f"{int(time_diff / 60)}m ago"
+                        else: # Same day
+                            data['time'] = f"{date_and_time.hour}:{date_and_time.minute:02}"
+                    else: # Same year
+                        data['time'] = f"{date_and_time.strftime('%B')} {date_and_time.day}"
+                else: # Different year
+                    data['time'] = f"{date_and_time.strftime('%B')} {date_and_time.year}"
 
     return recent_data
 
