@@ -155,7 +155,7 @@ def get_recents_processed():
     curr_time = datetime.datetime.now()
     for data in recent_data:
         for user_specific_time in recents:
-            if user_specific_time[1] == data['user_id']:
+            if data['user_id'] in user_specific_time[0:2]:
                 date_and_time = user_specific_time[2]
                 epoch_time = date_and_time.timestamp()
                 time_diff = time.time() - epoch_time
