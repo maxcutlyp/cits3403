@@ -28,15 +28,22 @@ const send_message_from_input = async () => {
         return
     }
 
-    add_message_to_chat(false, message)
+    var currentDate = new Date();
+
+    var hours = currentDate.getHours();
+    var minutes = currentDate.getMinutes();
+
+    add_message_to_chat(false, message, hours + ":" + minutes)
+
     await send_message(talking_to(), message, update_sidebar)
 
     message_input.value = ''
 }
 
-const add_message_to_chat = (incoming, message) => {
+const add_message_to_chat = (incoming, message, timestamp) => {
     // <p data-incoming|data-outgoing >
-    //     <span>${message}</span>
+    //     <span class="msg-contents">${message}</span>
+    //     <span class="msg-time">${timestamp}</span>
     // </p>
 
     const p = document.createElement('p')
@@ -47,9 +54,15 @@ const add_message_to_chat = (incoming, message) => {
         p.dataset.outgoing = ''
     }
 
-    const span = document.createElement('span')
-    span.textContent = message
-    p.appendChild(span)
+    const msg_span = document.createElement('span')
+    msg_span.textContent = message
+    msg_span.classList.add("msg-contents")
+    p.appendChild(msg_span)
+
+    const time_span = document.createElement('span')
+    time_span.textContent = timestamp
+    time_span.classList.add("msg-time")
+    p.appendChild(time_span)
 
     document.querySelector('.messages').prepend(p)
 }
@@ -79,7 +92,12 @@ const ws_json = async (json) => {
         return
     }
 
-    add_message_to_chat(true, json.message)
+    var currentDate = new Date();
+
+    var hours = currentDate.getHours();
+    var minutes = currentDate.getMinutes();
+
+    add_message_to_chat(true, json.message, hours + ":" + minutes)
 }
 
 document.addEventListener('DOMContentLoaded', () => {

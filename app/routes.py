@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_socketio import send, join_room
 
 import datetime
+import time
 
 from . import app, db, login, socketio
 from .models import User, Session, Request, Submission, Message
@@ -83,13 +84,23 @@ def route_messages(user_id: int | None):
             .order_by(db.desc(Message.timestamp))\
             .all()
 
+        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        day_endings = ["st", "nd", "rd"] + ["th" for _ in range(28)]
+
+        curr_day = datetime.datetime.now().day
+        curr_month = datetime.datetime.now().month
+        print(curr_day, curr_month)
+        print(messages[0].timestamp.day, messages[0].timestamp.month)
+
         messages_processed = [
             {
-                'contents': message.text_content,
-                'incoming': message.user_to == current_user.id,
+                'contents': msg.text_content,
+                'incoming': msg.user_to == current_user.id,
+                'timestamp': f"{msg.timestamp.hour}:{msg.timestamp.minute:02}" if (msg.timestamp.day == curr_day and msg.timestamp.month == curr_month) else f"{msg.timestamp.day}{day_endings[msg.timestamp.day - 1]} {months[msg.timestamp.month]}"
             }
-            for message in messages
+            for msg in messages
         ]
+
     else:
         messages_processed = None
 
@@ -102,6 +113,7 @@ def route_messages(user_id: int | None):
 
 @login_required
 def get_recents_processed():
+
     # SELECT user_from, user_to, MAX(timestamp) AS timestamp, text_content
     # FROM Message
     # WHERE user_from=$(current_user.id) OR user_to=$(current_user.id)
@@ -141,7 +153,7 @@ def get_recents_processed():
         seen_pairs.add((message.user_to, message.user_from))
         i += 1
 
-    return [
+    recent_data = [
         {
             'user_id': (other_user_id := ({ message.user_from, message.user_to } - { current_user.id }).pop()),
             'display_name': User.query.get(other_user_id).display_name,
@@ -149,6 +161,29 @@ def get_recents_processed():
         }
         for message in recents
     ]
+
+    curr_time = datetime.datetime.now()
+    for data in recent_data:
+        for user_specific_time in recents:
+            if data['user_id'] in user_specific_time[0:2]:
+                date_and_time = user_specific_time[2]
+                epoch_time = date_and_time.timestamp()
+                time_diff = time.time() - epoch_time
+                if curr_time.year == date_and_time.year:
+                    if curr_time.day == date_and_time.day:
+                        if time_diff < 3600:
+                            if time_diff < 60: # Within the last minute
+                                data['time'] = "now"
+                            else: # Within the last hour
+                                data['time'] = f"{int(time_diff / 60)}m ago"
+                        else: # Same day
+                            data['time'] = f"{date_and_time.hour}:{date_and_time.minute:02}"
+                    else: # Same year
+                        data['time'] = f"{date_and_time.strftime('%B')} {date_and_time.day}"
+                else: # Different year
+                    data['time'] = f"{date_and_time.strftime('%B')} {date_and_time.year}"
+
+    return recent_data
 
 @app.route('/components/messages-sidebar')
 @login_required
