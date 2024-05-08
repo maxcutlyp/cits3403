@@ -84,12 +84,21 @@ def route_messages(user_id: int | None):
             .order_by(db.desc(Message.timestamp))\
             .all()
 
+        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        day_endings = ["st", "nd", "rd"] + ["th" for _ in range(28)]
+
+        curr_day = datetime.datetime.now().day
+        curr_month = datetime.datetime.now().month
+        print(curr_day, curr_month)
+        print(messages[0].timestamp.day, messages[0].timestamp.month)
+
         messages_processed = [
             {
-                'contents': message.text_content,
-                'incoming': message.user_to == current_user.id,
+                'contents': msg.text_content,
+                'incoming': msg.user_to == current_user.id,
+                'timestamp': f"{msg.timestamp.hour}:{msg.timestamp.minute:02}" if (msg.timestamp.day == curr_day and msg.timestamp.month == curr_month) else f"{msg.timestamp.day}{day_endings[msg.timestamp.day - 1]} {months[msg.timestamp.month]}"
             }
-            for message in messages
+            for msg in messages
         ]
 
     else:
@@ -104,6 +113,7 @@ def route_messages(user_id: int | None):
 
 @login_required
 def get_recents_processed():
+
     # SELECT user_from, user_to, MAX(timestamp) AS timestamp, text_content
     # FROM Message
     # WHERE user_from=$(current_user.id) OR user_to=$(current_user.id)

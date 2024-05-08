@@ -19,8 +19,10 @@
                 <div class="messages">
                     {% for message in messages %}
                     <p {% if message['incoming'] %} data-incoming {% else %} data-outgoing {% endif %}>
-                        <span>{{ message['contents'] }}</span>
+                        <span class="msg-contents">{{ message['contents'] }}</span>
+                        <span class="msg-time">{{ message['timestamp'] }}</span>
                     </p>
+                        
                     {% endfor %}
                 </div>
                 <div class="message-controls">

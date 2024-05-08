@@ -86,20 +86,35 @@ body {
 }
 
 .messages p {
+    max-width: 60%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2px;
+}
+
+.messages span.msg-contents {
+    display: inline-block;
     border-radius: 0.5em;
     padding: 0.5em;
-    max-width: 60%;
+    color: var(--_msg-color);
+    background-color: var(--_msg-bg);
+}
+
+.messages span.msg-time {
+    font-size: 0.6rem;
 }
 
 .messages p[data-incoming] {
     align-self: start;
-    background-color: var(--accent-secondary);
+    align-items: start;
+    --_msg-bg: var(--accent-secondary);
 }
 
 .messages p[data-outgoing] {
     align-self: end;
-    background-color: var(--accent-primary);
-    color: Canvas;
+    align-items: end;
+    --_msg-bg: var(--accent-primary);
+    --_msg-color: Canvas;
 }
 
 .message-controls {
