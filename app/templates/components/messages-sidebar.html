@@ -5,8 +5,9 @@
             class="{% if message['user_id'] == selected %} selected {% endif %}"
         >
             <h2>{{ message['display_name'] }}</h2>
-            <p>{{ message['preview'] }}</p>
-            <p>{{ message['time'] }}</p>
+            <p class="time">{{ message['time'] }}</p>
+            <p class="message-preview">{{ message['preview'] }}</p>
+            
         </a>
     {% endfor %}
 </div>

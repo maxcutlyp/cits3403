@@ -151,7 +151,7 @@ def get_recents_processed():
         }
         for message in recents
     ]
-    
+
     curr_time = datetime.datetime.now()
     for data in recent_data:
         for user_specific_time in recents:

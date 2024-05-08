@@ -43,6 +43,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+
 }
 
 .sidebar a {
@@ -50,6 +51,8 @@ body {
     color: currentColor;
     padding-block: 0.5em;
     padding-inline: 1rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
 }
 
 .sidebar a > p {
@@ -57,6 +60,10 @@ body {
     overflow-x: hidden;
     text-overflow: ellipsis;
     opacity: .8;
+}
+
+.sidebar p.message-preview {
+    grid-column: span 2;
 }
 
 .sidebar .selected {
