@@ -142,12 +142,12 @@ def upload_image():
             if filename != '':
                 try:
                     username = current_user.display_name
-                    folder_path = os.path.join('app/static/imgs/users/', current_user.id)
+                    folder_path = os.path.join('app/static/imgs/users/', str(current_user.id))
                     os.makedirs(folder_path, exist_ok=True)
                     image_file.save(os.path.join(folder_path, filename))
 
                     new_image = Image(
-                        image_path=os.path.join('imgs/users/', current_user.id, filename),
+                        image_path=os.path.join('imgs/users/', str(current_user.id), filename),
                         title=form.title.data,
                         description=form.description.data,
                         artist_id=current_user.id
