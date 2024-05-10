@@ -1,13 +1,16 @@
 import flask
+import os
 from flask_login import login_user, logout_user, login_required, current_user
 
 from . import app, db, login
-from .models import User, Session, Request, Submission
-from .forms import LoginForm, SignupForm
+from .models import User, Session, Image
+from .forms import LoginForm, SignupForm, ImageUploadForm
+from werkzeug.utils import secure_filename
 
 @app.route('/')
 def index():
     return flask.render_template('index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -112,3 +115,60 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a hendrerit tell
         messages=messages, # Note: most recent messages first
         selected=username,
     )
+
+@app.route('/gallery/', defaults={'artistID': None})
+@app.route('/gallery/<int:artistID>')
+def gallery(artistID):
+    if artistID is None:
+        artistID = current_user.id
+
+    images = Image.query.filter_by(artist_id=artistID).all()
+    artist = User.query.get(artistID)
+
+    if not artist:
+        return "Artist not found", 404
+    return flask.render_template('gallery.html', images=images, artist=artist)
+
+#Place to add an image to the database
+@app.route('/upload_image', methods=['GET', 'POST'])
+def upload_image():
+    form = ImageUploadForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        description = form.description.data
+        image_file = form.image.data
+        filename = secure_filename(image_file.filename)
+
+        if current_user.is_authenticated:
+            filename = secure_filename(image_file.filename)
+            if filename != '':
+                try:
+                    username = current_user.display_name
+                    folder_path = os.path.join('app/static/imgs/users/', current_user.id)
+                    os.makedirs(folder_path, exist_ok=True)
+                    image_file.save(os.path.join(folder_path, filename))
+
+                    new_image = Image(
+                        image_path=os.path.join('imgs/users/', current_user.id, filename),
+                        title=form.title.data,
+                        description=form.description.data,
+                        artist_id=current_user.id
+                    )
+                    db.session.add(new_image)
+                    db.session.commit()
+                    flask.flash('Image successfully uploaded!', 'success')
+                except Exception as e:
+                    db.session.rollback()
+                    flask.flash(f'An error occurred: {str(e)}', 'error')
+            else:
+                flash('No file selected.', 'error')
+        else:
+            flash('You must be logged in to upload images.', 'error')
+        return flask.redirect(flask.url_for('index'))
+
+
+    return flask.render_template('upload_image.html', form=form)
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'webp'}
