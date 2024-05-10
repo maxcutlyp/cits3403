@@ -16,3 +16,7 @@
 
 # OS
 .DS_Store
+
+#Ignore images from users
+/static/imgs/users/
+./static/imgs/users/*
