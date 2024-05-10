@@ -14,15 +14,14 @@
 </head>
 <body>
     <!-- TODO: css style to header -->
-    <header>
-        <nav class="navbar">
-            <ul class="nav-bar">
-                <li><a href="/">Home</a></li>
-                <li><a href="/gallery">Personal Gallery</a></li> <!-- TODO: Hide when not logged in -->
-                <li><a href="/messages">Messages</a></li>
-                <li><a href="/login">Log In</a></li> <!-- TODO: Change to "Log out" when user is signed in -->
-            </ul>
-        </nav>
+    <header class="heading">
+                <title>[Website Name]</title>
+                {% if current_user.is_authenticated %}
+                    <a href="/messages">{{ current_user.display_name }}</a>
+                    <a href="/gallery">Gallery</a></li> <!-- TODO: Hide when not logged in -->
+                {% else %}
+                    <a href="/login">Log In</a>
+                {% endif %}
     </header>
     <div id="content">
         {% block content %}

@@ -27,15 +27,6 @@
     </head>
     <body class="background">
         <div class="page_grid">
-            <div class="heading">
-                <title>[Website Name]</title>
-                {% if current_user.is_authenticated %}
-                    <a href="/messages">{{ current_user.display_name }}</a>
-                {% else %}
-                    <a href="/login">Log In</a>
-                {% endif %}
-            </div>
-            
             <div class="sidebar">
                 <label>Sort By:</label>
                 <form>
