@@ -1,9 +1,13 @@
 import flask
 import os
-from flask_login import login_user, logout_user, login_required, current_user
+import datetime
+import time
 
-from . import app, db, login
-from .models import User, Session, Image
+from flask_login import login_user, logout_user, login_required, current_user
+from flask_socketio import send, join_room
+
+from . import app, db, login, socketio
+from .models import User, Session, Image, Message
 from .forms import LoginForm, SignupForm, ImageUploadForm
 from werkzeug.utils import secure_filename
 
@@ -19,7 +23,8 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None or not user.check_password(form.password.data):
-            # incorrect password - TODO: tell user
+            flask.session['last_err'] = f'Incorrect username or password.'
+            flask.flash('Invalid username or password', 'error')
             return flask.redirect(flask.url_for('login'))
 
         login_user(user)
@@ -27,7 +32,8 @@ def login():
         # TODO: "next" param (like in flask-login docs)
         return flask.redirect(flask.url_for('index'))
 
-    return flask.render_template('login.html', form=form)
+    error = flask.session.pop('last_err', None)
+    return flask.render_template('login.html', form=form, error=error)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -64,56 +70,48 @@ def logout():
     return flask.redirect(flask.url_for('index'))
 
 @app.route('/messages/')
+@login_required
 def route_messages_blank():
     return route_messages(None)
 
-@app.route('/messages/<string:username>')
-def route_messages(username: str | None):
-    # Most of this function is just generating dummy data
-    # TODO: pull from database
+@app.route('/messages/<int:user_id>')
+@login_required
+def route_messages(user_id: int | None):
+    if user_id is not None:
+        # Sorted most recent first to play nicely the frontend (see messages.css).
+        messages = Message.query\
+            .filter(
+                ((Message.user_from == current_user.id) & (Message.user_to == user_id)) |
+                ((Message.user_from == user_id) & (Message.user_to == current_user.id))
+            )\
+            .order_by(db.desc(Message.timestamp))\
+            .all()
 
-    lorem = '''\
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a hendrerit tellus. Cras vitae erat tristique, ultricies justo eget, ultricies purus. Etiam sit amet sem scelerisque, laoreet elit sit amet, convallis lacus. In aliquet orci sit amet pharetra consectetur. Nam vel lectus in enim maximus auctor. Donec sit amet tempor tortor. Nunc dolor odio, placerat et pharetra sed, semper id turpis. Ut sit amet risus ut nunc pulvinar imperdiet. Aliquam suscipit, nisl in malesuada mattis, urna ante maximus arcu, sit amet feugiat lectus neque ut quam. Ut magna neque, accumsan non feugiat at, malesuada vitae libero. Mauris lacinia ultrices ornare. Nam suscipit fermentum sem ut convallis. Cras dictum, neque vitae ultrices viverra, turpis ipsum auctor nulla, sed rutrum nisl odio mattis mauris. Mauris lorem nisi, dignissim non diam id, lacinia facilisis felis. Nunc ac auctor est. In hac habitasse platea dictumst. Ut gravida laoreet libero, vitae iaculis felis elementum eget. Fusce nec pellentesque dolor. Mauris a justo vitae nibh eleifend dictum. Etiam quis pharetra ipsum. Nunc at ex augue. Aliquam sed quam ante. Quisque sit amet nibh eu tortor porta rhoncus vel sed diam. Suspendisse faucibus rutrum fringilla. Ut id convallis diam, vitae imperdiet urna. Integer quis auctor urna. Sed pulvinar, elit ut tincidunt aliquet, tortor sapien sodales ex, eu auctor eros nisl in sapien. Fusce finibus metus vel semper laoreet. Donec sed vehicula est. Sed bibendum dignissim urna ornare vehicula. Aliquam fermentum pretium suscipit. Duis in urna erat. Aliquam id euismod purus. Morbi euismod porttitor posuere. In posuere sed erat ut varius. Ut mauris est, tempus in vestibulum vitae, fermentum nec tortor. Fusce vitae enim a diam iaculis placerat. Praesent at elit eu lorem feugiat tincidunt. Nam laoreet erat turpis, quis dignissim ex blandit vitae. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sodales, quam quis dignissim sodales, neque nibh commodo mauris, sed tincidunt justo ex non nisl. Praesent tincidunt id turpis sed lacinia. Sed urna tortor, commodo in dui et, hendrerit tempus libero. Nullam facilisis fringilla nisi id lacinia. Quisque pharetra faucibus justo, et elementum ex. Duis vitae ante cursus, fermentum mauris non, feugiat est. Pellentesque sem nunc, tincidunt et mi eu, maximus elementum quam. Vivamus tempor mattis lorem, id facilisis leo rutrum pharetra. Nulla efficitur augue sit amet mollis elementum. Proin id justo at est cursus imperdiet vel sed tortor. In in eros in justo vestibulum finibus. Curabitur augue quam, mattis in posuere nec, lacinia non risus. Donec malesuada sed tellus non iaculis. Nunc elementum suscipit justo, vel cursus lorem pharetra vel. Nunc tempus volutpat turpis ac pharetra. Praesent et vestibulum nulla. Praesent et neque euismod, consectetur ex nec, rhoncus purus.\
-'''.split(' ')
-    lorems = lambda n : ' '.join(lorem[(start := random.randrange(len(lorem))):start+n])
+        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        day_endings = ["st", "nd", "rd"] + ["th" for _ in range(28)]
 
-    # yoinked from https://dzone.com/articles/name-lists-generating-test
-    fnames = ['john','robert','michael','william','david','richard','mary','patricia','linda','barbara','elizabeth','jennifer']
-    snames = ['smith','johnson','williams','brown','jones','miller','davis','garcia','rodriguez','wilson','martinez']
+        curr_day = datetime.datetime.now().day
+        curr_month = datetime.datetime.now().month
+        print(curr_day, curr_month)
+        print(messages[0].timestamp.day, messages[0].timestamp.month)
 
-    # import here because all the code relying on it is temporary anyway
-    import random
-
-    recents = [
-        {
-            'username': random.choice(fnames) + random.choice(snames),
-            'preview': lorems(20),
-        }
-        for _ in range(20)
-    ]
-
-    if username is None:
-        messages = None
-    else:
-        messages = [
+        messages_processed = [
             {
-                'incoming': bool(random.randint(0, 1)),
-                'contents': lorems(random.randint(1, 30))
+                'contents': msg.text_content,
+                'incoming': msg.user_to == current_user.id,
+                'timestamp': f"{msg.timestamp.hour}:{msg.timestamp.minute:02}" if (msg.timestamp.day == curr_day and msg.timestamp.month == curr_month) else f"{msg.timestamp.day}{day_endings[msg.timestamp.day - 1]} {months[msg.timestamp.month]}"
             }
-            for _ in range(random.randint(1, 40))
+            for msg in messages
         ]
 
-        if username not in [ x['username'] for x in recents ]:
-            recents.insert(0, {
-                'username': username,
-                'preview': lorems(20),
-            })
+    else:
+        messages_processed = None
 
     return flask.render_template(
         'messages.html',
-        recents=recents,
-        messages=messages, # Note: most recent messages first
-        selected=username,
+        recents=get_recents_processed(),
+        messages=messages_processed,
+        selected=user_id,
     )
 
 @app.route('/gallery/', defaults={'artistID': None})
@@ -172,3 +170,132 @@ def upload_image():
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+@login_required
+def get_recents_processed():
+
+    # SELECT user_from, user_to, MAX(timestamp) AS timestamp, text_content
+    # FROM Message
+    # WHERE user_from=$(current_user.id) OR user_to=$(current_user.id)
+    # GROUP BY (user_from, user_to)
+    # ORDER BY timestamp DESC
+
+    recents = db.session.query(
+            Message.user_from,
+            Message.user_to,
+            db.func.max(Message.timestamp).label('timestamp'),
+            Message.text_content,
+        )\
+        .filter((Message.user_from == current_user.id) | (Message.user_to == current_user.id))\
+        .group_by(Message.user_from, Message.user_to)\
+        .order_by(db.desc('timestamp'))\
+        .all()
+
+    # `recents` contains both the most recent message sent from `current_user` to every
+    # other user, and the most recent message sent from every other user to `current_user`,
+    # ordered by most recent message first.
+    # For any given pair of ((current_user -> other_user), (other_user -> current_user))
+    # messages, we are only interested in the most recent (i.e. earlier in the list) one.
+    # So we loop through and remove any messages whose conterpart we've already seen.
+    # If you can think of a SQL-only solution to this, let me know.
+
+    seen_pairs = set()
+    i = 0
+    while i < len(recents):
+        message = recents[i]
+
+        # (from, to)
+        if (message.user_from, message.user_to) in seen_pairs:
+            recents.pop(i)
+            continue
+
+        # (to, from)
+        seen_pairs.add((message.user_to, message.user_from))
+        i += 1
+
+    recent_data = [
+        {
+            'user_id': (other_user_id := ({ message.user_from, message.user_to } - { current_user.id }).pop()),
+            'display_name': User.query.get(other_user_id).display_name,
+            'preview': message.text_content,
+        }
+        for message in recents
+    ]
+
+    curr_time = datetime.datetime.now()
+    for data in recent_data:
+        for user_specific_time in recents:
+            if data['user_id'] in user_specific_time[0:2]:
+                date_and_time = user_specific_time[2]
+                epoch_time = date_and_time.timestamp()
+                time_diff = time.time() - epoch_time
+                if curr_time.year == date_and_time.year:
+                    if curr_time.day == date_and_time.day:
+                        if time_diff < 3600:
+                            if time_diff < 60: # Within the last minute
+                                data['time'] = "now"
+                            else: # Within the last hour
+                                data['time'] = f"{int(time_diff / 60)}m ago"
+                        else: # Same day
+                            data['time'] = f"{date_and_time.hour}:{date_and_time.minute:02}"
+                    else: # Same year
+                        data['time'] = f"{date_and_time.strftime('%B')} {date_and_time.day}"
+                else: # Different year
+                    data['time'] = f"{date_and_time.strftime('%B')} {date_and_time.year}"
+
+    return recent_data
+
+@app.route('/components/messages-sidebar')
+@login_required
+def messages_sidebar():
+    try:
+        selected = int(flask.request.args['selected'])
+    except (KeyError, ValueError):
+        selected = None
+
+    return flask.render_template(
+        'components/messages-sidebar.html',
+        recents=get_recents_processed(),
+        selected=selected,
+    )
+
+@socketio.on('connect')
+@login_required
+def ws_connect():
+    join_room(current_user.id)
+
+@socketio.on('json')
+@login_required
+def ws_json(data: dict, *args):
+    user_to = data.get('to', None)
+    message = data.get('message', None)
+
+    if user_to is None or message is None:
+        print(f'Got unknown json data from socket: {data}')
+        return
+
+    send_message(user_to, message)
+
+@login_required
+def send_message(user_id: int, text_content: str):
+    message = Message(
+        user_from=current_user.id,
+        user_to=user_id,
+        timestamp=datetime.datetime.now(),
+        text_content=text_content,
+    )
+
+    send(
+        {
+            'from': {
+                'id': current_user.id,
+                'display_name': current_user.display_name,
+            },
+            'message': text_content,
+        },
+        json=True,
+        room=user_id,
+    )
+
+    db.session.add(message)
+    db.session.commit()

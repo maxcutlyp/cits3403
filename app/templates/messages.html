@@ -4,21 +4,13 @@
         <title>Messages</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/messages.css') }}">
+        <script src="{{ url_for('static', messages.js) }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     </head>
     <body>
         <div class="sidebar">
             <h1>Messages</h1>
-            <div class="items">
-                {% for message in recents %}
-                    <a
-                        href="{{ message['username'] }}"
-                        class="{% if message['username'] == selected %} selected {% endif %}"
-                    >
-                        <h2>{{ message['username'] }}</h2>
-                        <p>{{ message['preview'] }}</p>
-                    </a>
-                {% endfor %}
-            </div>
+            {% include 'components/messages-sidebar.html' %}
         </div>
         <div class="messages-wrapper">
             {% if messages is none %}
@@ -27,8 +19,10 @@
                 <div class="messages">
                     {% for message in messages %}
                     <p {% if message['incoming'] %} data-incoming {% else %} data-outgoing {% endif %}>
-                        <span>{{ message['contents'] }}</span>
+                        <span class="msg-contents">{{ message['contents'] }}</span>
+                        <span class="msg-time">{{ message['timestamp'] }}</span>
                     </p>
+                        
                     {% endfor %}
                 </div>
                 <div class="message-controls">

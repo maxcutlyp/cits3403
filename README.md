@@ -6,8 +6,18 @@
 $ pip install -r requirements.txt
 $ export FLASK_SECRET_KEY=$(python -c 'import secrets; print(secrets.token_hex())')
 $ flask db upgrade # setup database
-$ flask run
+$ python -m app
 ```
+
+## Test data
+
+After first-time setup (see above):
+
+```console
+$ python -m app.test_data.whatevertest
+```
+
+Where `whatevertest` is replaced with the name of the test file (minus `.py`) in the `/app/test_data` folder, e.g. `messages`.
 
 # Key Features:
 ## Artist Pages:

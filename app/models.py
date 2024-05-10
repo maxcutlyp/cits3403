@@ -42,3 +42,16 @@ class Session(db.Model):
     # Schema: (userId | sessionId | ... )
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #UserId, Foreign key, corresponding to user table
     session_id = db.Column(db.String(128), unique=True, primary_key=True) #Unique Session ID to represent each user's session
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_from = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_to = db.Column(db.Integer, db.ForeignKey('user.id'))
+    timestamp = db.Column(db.DateTime, nullable=False)
+    text_content = db.Column(db.Text, nullable=False)
+    # TODO: attachments e.g. images
+
+    __table_args__ = (
+        db.CheckConstraint('user_from != user_to'),
+    )
+
