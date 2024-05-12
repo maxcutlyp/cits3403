@@ -83,7 +83,7 @@
     overflow-y: auto;
 }
 
-.offer {
+.offer_grid .offer {
     display: grid;
     background-color: #cbcbcb;
     border-radius: 5px;
