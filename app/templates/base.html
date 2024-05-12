@@ -20,7 +20,11 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/gallery">Personal Gallery</a></li> <!-- TODO: Hide when not logged in -->
                 <li><a href="/messages">Messages</a></li>
-                <li><a href="/login">Log In</a></li> <!-- TODO: Change to "Log out" when user is signed in -->
+                {% if current_user.is_authenticated %}
+                    <li><a href="/logout">Log Out</a></li>
+                {% else %}
+                    <li><a href="/login">Log In</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
