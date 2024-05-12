@@ -18,9 +18,9 @@
         <nav class="navbar">
             <ul class="nav-bar">
                 <li><a href="/">Home</a></li>
-                <li><a href="/gallery">Personal Gallery</a></li> <!-- TODO: Hide when not logged in -->
-                <li><a href="/messages">Messages</a></li>
                 {% if current_user.is_authenticated %}
+                    <li><a href="/gallery">Personal Gallery</a></li>
+                    <li><a href="/messages">Messages</a></li>
                     <li><a href="/logout">Log Out</a></li>
                 {% else %}
                     <li><a href="/login">Log In</a></li>
