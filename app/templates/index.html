@@ -27,81 +27,23 @@
                 
                 <label>Tags:</label>
                 <ul>
-                    <li><input type="checkbox">Realism</li>
-                    <li><input type="checkbox">Nature</li>
-                    <li><input type="checkbox">Fanart</li>
-                    <li><input type="checkbox">Digital</li>
-                    <li><input type="checkbox">Painting</li>
-                    <li><input type="checkbox">Still Life</li>
-                    <li><input type="checkbox">Futuristic</li>
-                    <li><input type="checkbox">Photorealism</li>
-                    <li><input type="checkbox">Collage</li>
-                    <li><input type="checkbox">Historical</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
+                    {% for tag in tags %}
+                        <li><input type="checkbox">{{ tag }}</li>
+                    {% endfor %}
                 </ul>
                 <button class="tags">Update Tags</button>
             </div>
 
             <div class="offer_grid">
-                <a class="offer" href="/">
-                    <b>Offer 1:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 2:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 3:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 4:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 5:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 6:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 7:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 8:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 9:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
+                {% for offer in offers %}
+                    <a class="offer" href="/offer/{{ offer.id }}">
+                        <b>{{ offer.title }}</b>
+                        <p class="description">{{ offer.description }}</p>
+                        <img src="{{ offer.image }}">
+                        <!-- <p class="price">{{ offer.image }}</p> -->
+                        <p class="price">${{ offer.price }}</p>
+                    </a>
+                {% endfor %}
                 </a>
             </div>
         </div>

@@ -2,18 +2,40 @@ import flask
 import os
 import datetime
 import time
+import base64
 
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_socketio import send, join_room
 
 from . import app, db, login, socketio
-from .models import User, Session, Image, Message
+from .models import User, Session, Image, Message, Offer, Tag
 from .forms import LoginForm, SignupForm, ImageUploadForm
 from werkzeug.utils import secure_filename
 
 @app.route('/')
 def index():
-    return flask.render_template('index.html')
+
+    tag_list = [tag.name for tag in Tag.query.all()]
+
+    offers = db.session.query\
+            (
+                Offer.title,
+                Offer.description,
+                Offer.image_path,
+                Offer.price,
+            ).all()
+
+    offer_list = [
+             {
+                 'title': offer.title,
+                 'description': offer.description,
+                 'image': 'data:image/png;base64,' + base64.b64encode(offer.image_path).decode('utf-8'),
+                 'price': f"{offer.price:.2f}",
+             }
+             for offer in offers
+         ]
+
+    return flask.render_template('index.html', tags=tag_list, offers=offer_list)
 
 
 @app.route('/login', methods=['GET', 'POST'])
