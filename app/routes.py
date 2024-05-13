@@ -2,6 +2,7 @@ import flask
 import os
 import datetime
 import time
+import base64
 
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_socketio import send, join_room
@@ -15,7 +16,7 @@ from werkzeug.utils import secure_filename
 def index():
 
     tag_list = [tag.name for tag in Tag.query.all()]
-    
+
     offers = db.session.query\
             (
                 Offer.title,
@@ -28,7 +29,7 @@ def index():
              {
                  'title': offer.title,
                  'description': offer.description,
-                 'image': offer.image_path,
+                 'image': 'data:image/png;base64,' + base64.b64encode(offer.image_path).decode('utf-8'),
                  'price': f"{offer.price:.2f}",
              }
              for offer in offers
