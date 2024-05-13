@@ -62,7 +62,7 @@ class Offer(db.Model):
     timestamp = db.Column(db.DateTime, nullable=False)
     title = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=False)
-    image_path = db.Column(db.String(100), nullable=False)
+    image_path = db.Column(db.BLOB, nullable=False)
     price = db.Column(db.Float, nullable=False)
     tag_id = db.Column(db.Integer, db.ForeignKey('tag.id'))
 

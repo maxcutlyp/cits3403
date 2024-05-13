@@ -15,10 +15,26 @@ from werkzeug.utils import secure_filename
 def index():
 
     tag_list = [tag.name for tag in Tag.query.all()]
+    
+    offers = db.session.query\
+            (
+                Offer.title,
+                Offer.description,
+                Offer.image_path,
+                Offer.price,
+            ).all()
 
-    print(tag_list)
+    offer_list = [
+             {
+                 'title': offer.title,
+                 'description': offer.description,
+                 'image': offer.image_path,
+                 'price': f"{offer.price:.2f}",
+             }
+             for offer in offers
+         ]
 
-    return flask.render_template('index.html', tags=tag_list)
+    return flask.render_template('index.html', tags=tag_list, offers=offer_list)
 
 
 @app.route('/login', methods=['GET', 'POST'])
