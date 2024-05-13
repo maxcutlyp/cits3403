@@ -5,7 +5,11 @@
             class="{% if message['user_id'] == selected %} selected {% endif %}"
         >
             <h2>{{ message['display_name'] }}</h2>
-            <p class="time">{{ message['time'] }}</p>
+            {% if message['is_read'] %}
+                <p class="time">{{ message['time'] }}</p>
+            {% else %}
+                <p class="time" style="color: #ffff86;">{{ message['time'] }}</p>
+            {% endif %}
             <p class="message-preview">{{ message['preview'] }}</p>
             
         </a>

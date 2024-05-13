@@ -49,6 +49,7 @@ class Message(db.Model):
     user_to = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, nullable=False)
     text_content = db.Column(db.Text, nullable=False)
+    is_read = db.Column(db.Integer, nullable=False, default=0)
     # TODO: attachments e.g. images
 
     __table_args__ = (

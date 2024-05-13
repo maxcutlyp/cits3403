@@ -26,8 +26,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a hendrerit tell
         message = Message(
             user_from=user_from.id,
             user_to=user_to.id,
-            timestamp = now - datetime.timedelta(seconds=random.randint(0, seconds_in_a_week)),
+            timestamp=now - datetime.timedelta(seconds=random.randint(0, seconds_in_a_week)),
             text_content=lorems(random.randint(1, 30)),
+            is_read=0
         )
 
         db.session.add(message)
