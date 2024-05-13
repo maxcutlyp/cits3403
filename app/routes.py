@@ -7,13 +7,18 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_socketio import send, join_room
 
 from . import app, db, login, socketio
-from .models import User, Session, Image, Message
+from .models import User, Session, Image, Message, Offer, Tag
 from .forms import LoginForm, SignupForm, ImageUploadForm
 from werkzeug.utils import secure_filename
 
 @app.route('/')
 def index():
-    return flask.render_template('index.html')
+
+    tag_list = [tag.name for tag in Tag.query.all()]
+
+    print(tag_list)
+
+    return flask.render_template('index.html', tags=tag_list)
 
 
 @app.route('/login', methods=['GET', 'POST'])

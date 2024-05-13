@@ -27,23 +27,9 @@
                 
                 <label>Tags:</label>
                 <ul>
-                    <li><input type="checkbox">Realism</li>
-                    <li><input type="checkbox">Nature</li>
-                    <li><input type="checkbox">Fanart</li>
-                    <li><input type="checkbox">Digital</li>
-                    <li><input type="checkbox">Painting</li>
-                    <li><input type="checkbox">Still Life</li>
-                    <li><input type="checkbox">Futuristic</li>
-                    <li><input type="checkbox">Photorealism</li>
-                    <li><input type="checkbox">Collage</li>
-                    <li><input type="checkbox">Historical</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
-                    <li><input type="checkbox">Urban</li>
+                    {% for tag in tags %}
+                        <li><input type="checkbox">{{ tag }}</li>
+                    {% endfor %}
                 </ul>
                 <button class="tags">Update Tags</button>
             </div>
