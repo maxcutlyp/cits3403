@@ -86,14 +86,25 @@ def route_messages(user_id: int | None):
             )\
             .order_by(db.desc(Message.timestamp))\
             .all()
+        
+        messages_to_read = Message.query\
+            .filter(
+                ((Message.user_from == user_id) & (Message.user_to == current_user.id))
+            )\
+            .order_by(db.desc(Message.timestamp))\
+            .all()
+        
+
+        for msg in messages_to_read:
+            msg.is_read = 1
+        
+        db.session.commit()
 
         months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         day_endings = ["st", "nd", "rd"] + ["th" for _ in range(28)]
 
         curr_day = datetime.datetime.now().day
         curr_month = datetime.datetime.now().month
-        print(curr_day, curr_month)
-        print(messages[0].timestamp.day, messages[0].timestamp.month)
 
         messages_processed = [
             {
@@ -185,10 +196,20 @@ def get_recents_processed():
             Message.user_to,
             db.func.max(Message.timestamp).label('timestamp'),
             Message.text_content,
+            Message.is_read
         )\
         .filter((Message.user_from == current_user.id) | (Message.user_to == current_user.id))\
         .group_by(Message.user_from, Message.user_to)\
         .order_by(db.desc('timestamp'))\
+        .all()
+    
+    received_messages = db.session.query(
+        Message.user_from,
+        Message.is_read,
+        Message.text_content
+        )\
+        .filter(Message.user_to == current_user.id)\
+        .order_by(db.desc(Message.timestamp))\
         .all()
 
     # `recents` contains both the most recent message sent from `current_user` to every
@@ -213,11 +234,15 @@ def get_recents_processed():
         seen_pairs.add((message.user_to, message.user_from))
         i += 1
 
+    for msg in received_messages:
+        print(msg)
+
     recent_data = [
         {
             'user_id': (other_user_id := ({ message.user_from, message.user_to } - { current_user.id }).pop()),
             'display_name': User.query.get(other_user_id).display_name,
             'preview': message.text_content,
+            'is_read': message.is_read == 1,
         }
         for message in recents
     ]
