@@ -206,9 +206,8 @@ def get_recents_processed():
     received_messages = db.session.query(
         Message.user_from,
         Message.is_read,
-        Message.text_content
         )\
-        .filter(Message.user_to == current_user.id)\
+        .filter((Message.user_to == current_user.id))\
         .order_by(db.desc(Message.timestamp))\
         .all()
 
@@ -234,15 +233,16 @@ def get_recents_processed():
         seen_pairs.add((message.user_to, message.user_from))
         i += 1
 
+    read_users = {msg.user_from: 1 for msg in received_messages}
     for msg in received_messages:
-        print(msg)
+        read_users[msg.user_from] = min(read_users[msg.user_from], (msg.is_read == 1))
 
     recent_data = [
         {
             'user_id': (other_user_id := ({ message.user_from, message.user_to } - { current_user.id }).pop()),
             'display_name': User.query.get(other_user_id).display_name,
             'preview': message.text_content,
-            'is_read': message.is_read == 1,
+            'is_read': read_users[other_user_id],
         }
         for message in recents
     ]

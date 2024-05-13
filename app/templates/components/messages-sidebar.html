@@ -4,12 +4,12 @@
             href="{{ message['user_id'] }}"
             class="{% if message['user_id'] == selected %} selected {% endif %}"
         >
+            <h2>{{ message['display_name'] }}</h2>
             {% if message['is_read'] %}
-                <h2>{{ message['display_name'] }}</h2>
+                <p class="time">{{ message['time'] }}</p>
             {% else %}
-                <h2 style="color: aquamarine;">{{ message['display_name'] }}</h2>
+                <p class="time" style="color: #ffff86;">{{ message['time'] }}</p>
             {% endif %}
-            <p class="time">{{ message['time'] }}</p>
             <p class="message-preview">{{ message['preview'] }}</p>
             
         </a>
