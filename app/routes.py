@@ -15,17 +15,21 @@ from werkzeug.utils import secure_filename
 @app.route('/')
 def index():
 
+    sort_attribute = flask.request.args.get('sort')
+
     tag_list = [tag.name for tag in Tag.query.all()]
 
-    offers = db.session.query\
-            (
-                Offer.title,
-                Offer.description,
-                Offer.artist_id,
-                Offer.image_path,
-                Offer.price,
-            ).all()
-
+    if sort_attribute == "new":
+        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).order_by(Offer.timestamp.desc()).all()
+    elif sort_attribute == "old":
+        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).order_by(Offer.timestamp.asc()).all()
+    elif sort_attribute == "cheap":
+        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).order_by(Offer.price.asc()).all()
+    elif sort_attribute == "expensive":
+        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).order_by(Offer.price.desc()).all()
+    else:
+        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).all()
+        
     offer_list = [
              {
                  'title': offer.title,
