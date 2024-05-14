@@ -12,28 +12,22 @@
     <body class="background">
         <div class="page_grid">
             <div class="sidebar">
-                <label>Sort By:</label>
                 <form>
+                    <label>Sort By:</label>
                     <select name="sort" id="sort">
                         <option value="new">Date Added - Newest</option>
                         <option value="old">Date Added - Oldest</option>
                         <option value="cheap">Price - Low To High</option>
                         <option value="expensive">Price - High To Low</option>
-                    </select>
-                    <div>
-                        <input type="submit" value="Sort">
-                    </div>
-                </form>
-                
-                <label>Tags:</label>
-                <form>
+                    </select>                
+                    <label>Tags:</label>
                     <select name="tags" id="tags" multiple>
                         {% for tag in tags %}
                             <option type="checkbox">{{ tag }}</option>
                         {% endfor %}
                     </select>
                     <div></div>
-                    <input type="submit" value="Submit">
+                    <input type="submit" value="Update">
                 </form>
             </div>
 

@@ -27,8 +27,6 @@ def index():
     else:
         allowed_tags = [tag.id for tag in tag_list if tag.name in allowed_tags]
 
-    print(f"tags: {allowed_tags}")
-
     if sort_attribute == "new":
         offers = db.session.query(
                 Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
@@ -41,7 +39,7 @@ def index():
         offers = db.session.query(
                 Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
             ).order_by(
-                Offer.timestamp.desc()
+                Offer.timestamp.asc()
             ).filter(
                 Offer.tag_id.in_(allowed_tags)
             ).all()
@@ -49,7 +47,7 @@ def index():
         offers = db.session.query(
                 Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
             ).order_by(
-                Offer.timestamp.desc()
+                Offer.price.asc()
             ).filter(
                 Offer.tag_id.in_(allowed_tags)
             ).all()
@@ -57,7 +55,7 @@ def index():
         offers = db.session.query(
                 Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
             ).order_by(
-                Offer.timestamp.desc()
+                Offer.price.desc()
             ).filter(
                 Offer.tag_id.in_(allowed_tags)
             ).all()
