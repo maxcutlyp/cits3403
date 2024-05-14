@@ -14,7 +14,9 @@
         <h2>{{ artist.display_name }}</h2>
         <h4>{{ artist.artist_title }}</h4>
         <p>{{ artist.artist_description }}</p>
-        <a href="/upload_image">Upload Image</a>
+        {% if artist.id == current_user.id %}
+            <a href="/upload_image">Upload Image</a>
+        {% endif %}
     </div>
 
     <div class="gallery-container">
