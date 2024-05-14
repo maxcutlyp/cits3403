@@ -36,11 +36,10 @@
 
             <div class="offer_grid">
                 {% for offer in offers %}
-                    <a class="offer" href="/offer/{{ offer.id }}">
+                    <a class="offer" href="/gallery/{{ offer.artist_id }}">
                         <b>{{ offer.title }}</b>
                         <p class="description">{{ offer.description }}</p>
                         <img src="{{ offer.image }}">
-                        <!-- <p class="price">{{ offer.image }}</p> -->
                         <p class="price">${{ offer.price }}</p>
                     </a>
                 {% endfor %}

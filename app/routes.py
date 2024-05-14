@@ -21,6 +21,7 @@ def index():
             (
                 Offer.title,
                 Offer.description,
+                Offer.artist_id,
                 Offer.image_path,
                 Offer.price,
             ).all()
@@ -29,6 +30,7 @@ def index():
              {
                  'title': offer.title,
                  'description': offer.description,
+                 'artist_id': offer.artist_id,
                  'image': 'data:image/png;base64,' + base64.b64encode(offer.image_path).decode('utf-8'),
                  'price': f"{offer.price:.2f}",
              }
