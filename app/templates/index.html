@@ -1,48 +1,44 @@
 <!-- App Homepage -->
 {% extends "base.html" %}
 
-{% block content %}
-<!DOCTYPE html>
-<!-- TODO: Change website name-->
-<html>
-    <head>
-        <title>[Website Name]</title>
-        <link rel="stylesheet" href="/static/homepage.css">
-    </head>
-    <body class="background">
-        <div class="page_grid">
-            <div class="sidebar">
-                <form>
-                    <label>Sort By:</label>
-                    <select name="sort" id="sort">
-                        <option value="new">Date Added - Newest</option>
-                        <option value="old">Date Added - Oldest</option>
-                        <option value="cheap">Price - Low To High</option>
-                        <option value="expensive">Price - High To Low</option>
-                    </select>                
-                    <label>Tags:</label>
-                    <select name="tags" id="tags" multiple>
-                        {% for tag in tags %}
-                            <option type="checkbox">{{ tag }}</option>
-                        {% endfor %}
-                    </select>
-                    <div></div>
-                    <input type="submit" value="Update">
-                </form>
-            </div>
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+{% endblock %}
 
-            <div class="offer_grid">
-                {% for offer in offers %}
-                    <a class="offer" href="/gallery/{{ offer.artist_id }}">
-                        <b>{{ offer.title }}</b>
-                        <p class="description">{{ offer.description }}</p>
-                        <img src="{{ offer.image }}">
-                        <p class="price">${{ offer.price }}</p>
-                    </a>
-                {% endfor %}
-                </a>
-            </div>
+{% block content %}
+<body class="background">
+    <div class="page_grid">
+        <div class="sidebar">
+            <form>
+                <label>Sort By:</label>
+                <select name="sort" id="sort">
+                    <option value="new">Date Added - Newest</option>
+                    <option value="old">Date Added - Oldest</option>
+                    <option value="cheap">Price - Low To High</option>
+                    <option value="expensive">Price - High To Low</option>
+                </select>                
+                <label>Tags:</label>
+                <select name="tags" id="tags" multiple>
+                    {% for tag in tags %}
+                        <option type="checkbox">{{ tag }}</option>
+                    {% endfor %}
+                </select>
+                <div></div>
+                <input type="submit" value="Update">
+            </form>
         </div>
-    </body>
-</html>
+
+        <div class="offer_grid">
+            {% for offer in offers %}
+                <a class="offer" href="/gallery/{{ offer.artist_id }}">
+                    <b>{{ offer.title }}</b>
+                    <p class="description">{{ offer.description }}</p>
+                    <img src="{{ offer.image }}">
+                    <p class="price">${{ offer.price }}</p>
+                </a>
+            {% endfor %}
+            </a>
+        </div>
+    </div>
+</body>
 {% endblock %}
