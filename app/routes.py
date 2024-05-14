@@ -20,15 +20,33 @@ def index():
     tag_list = [tag.name for tag in Tag.query.all()]
 
     if sort_attribute == "new":
-        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).order_by(Offer.timestamp.desc()).all()
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).order_by(
+                Offer.timestamp.desc()
+            ).all()
     elif sort_attribute == "old":
-        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).order_by(Offer.timestamp.asc()).all()
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).order_by(
+                Offer.timestamp.asc()
+            ).all()
     elif sort_attribute == "cheap":
-        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).order_by(Offer.price.asc()).all()
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).order_by(
+                Offer.price.asc()
+            ).all()
     elif sort_attribute == "expensive":
-        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).order_by(Offer.price.desc()).all()
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).order_by(
+                Offer.price.desc()
+            ).all()
     else:
-        offers = db.session.query(Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price).all()
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).all()
         
     offer_list = [
              {

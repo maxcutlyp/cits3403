@@ -26,12 +26,15 @@
                 </form>
                 
                 <label>Tags:</label>
-                <ul>
-                    {% for tag in tags %}
-                        <li><input type="checkbox">{{ tag }}</li>
-                    {% endfor %}
-                </ul>
-                <button type="submit" class="tags" value="tags">Update Tags</button>
+                <form>
+                    <select name="cars" id="cars" multiple>
+                        {% for tag in tags %}
+                            <option type="checkbox">{{ tag }}</option>
+                        {% endfor %}
+                    </select>
+                    <div></div>
+                    <input type="submit" value="Submit">
+                </form>
             </div>
 
             <div class="offer_grid">
