@@ -27,44 +27,24 @@ def index():
     else:
         allowed_tags = [tag.id for tag in tag_list if tag.name in allowed_tags]
 
-    if sort_attribute == "new":
-        offers = db.session.query(
+    match sort_attribute:
+        case None | "new":
+            order_orientation = Offer.timestamp.desc()
+        case "old":
+            order_orientation = Offer.timestamp.asc()
+        case "cheap":
+            order_orientation = Offer.price.asc()
+        case "expensive":
+            order_orientation = Offer.price.desc()
+
+    offers = db.session.query(
                 Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
             ).order_by(
-                Offer.timestamp.desc()
+                order_orientation
             ).filter(
                 Offer.tag_id.in_(allowed_tags)
             ).all()
-    elif sort_attribute == "old":
-        offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
-            ).order_by(
-                Offer.timestamp.asc()
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
-            ).all()
-    elif sort_attribute == "cheap":
-        offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
-            ).order_by(
-                Offer.price.asc()
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
-            ).all()
-    elif sort_attribute == "expensive":
-        offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
-            ).order_by(
-                Offer.price.desc()
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
-            ).all()
-    else:
-        offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
-            ).all()
+
         
     offer_list = [
              {
