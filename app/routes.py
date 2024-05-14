@@ -15,27 +15,69 @@ from werkzeug.utils import secure_filename
 @app.route('/')
 def index():
 
-    tag_list = [tag.name for tag in Tag.query.all()]
+    sort_attribute = flask.request.args.get('sort')
+    allowed_tags = flask.request.args.getlist('tags')
 
-    offers = db.session.query\
-            (
-                Offer.title,
-                Offer.description,
-                Offer.image_path,
-                Offer.price,
+    tag_list = Tag.query.all()
+
+    tag_names = [tag.name for tag in tag_list]
+
+    if allowed_tags == []:
+        allowed_tags = [tag.id for tag in tag_list]
+    else:
+        allowed_tags = [tag.id for tag in tag_list if tag.name in allowed_tags]
+
+    if sort_attribute == "new":
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).order_by(
+                Offer.timestamp.desc()
+            ).filter(
+                Offer.tag_id.in_(allowed_tags)
             ).all()
-
+    elif sort_attribute == "old":
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).order_by(
+                Offer.timestamp.asc()
+            ).filter(
+                Offer.tag_id.in_(allowed_tags)
+            ).all()
+    elif sort_attribute == "cheap":
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).order_by(
+                Offer.price.asc()
+            ).filter(
+                Offer.tag_id.in_(allowed_tags)
+            ).all()
+    elif sort_attribute == "expensive":
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).order_by(
+                Offer.price.desc()
+            ).filter(
+                Offer.tag_id.in_(allowed_tags)
+            ).all()
+    else:
+        offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).filter(
+                Offer.tag_id.in_(allowed_tags)
+            ).all()
+        
     offer_list = [
              {
                  'title': offer.title,
                  'description': offer.description,
+                 'artist_id': offer.artist_id,
                  'image': 'data:image/png;base64,' + base64.b64encode(offer.image_path).decode('utf-8'),
                  'price': f"{offer.price:.2f}",
              }
              for offer in offers
          ]
 
-    return flask.render_template('index.html', tags=tag_list, offers=offer_list)
+    return flask.render_template('index.html', tags=tag_names, offers=offer_list)
 
 
 @app.route('/login', methods=['GET', 'POST'])

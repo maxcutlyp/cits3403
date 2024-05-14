@@ -12,35 +12,31 @@
     <body class="background">
         <div class="page_grid">
             <div class="sidebar">
-                <label>Sort By:</label>
                 <form>
+                    <label>Sort By:</label>
                     <select name="sort" id="sort">
                         <option value="new">Date Added - Newest</option>
                         <option value="old">Date Added - Oldest</option>
                         <option value="cheap">Price - Low To High</option>
                         <option value="expensive">Price - High To Low</option>
+                    </select>                
+                    <label>Tags:</label>
+                    <select name="tags" id="tags" multiple>
+                        {% for tag in tags %}
+                            <option type="checkbox">{{ tag }}</option>
+                        {% endfor %}
                     </select>
-                    <div>
-                        <input type="submit" value="Sort">
-                    </div>
+                    <div></div>
+                    <input type="submit" value="Update">
                 </form>
-                
-                <label>Tags:</label>
-                <ul>
-                    {% for tag in tags %}
-                        <li><input type="checkbox">{{ tag }}</li>
-                    {% endfor %}
-                </ul>
-                <button class="tags">Update Tags</button>
             </div>
 
             <div class="offer_grid">
                 {% for offer in offers %}
-                    <a class="offer" href="/offer/{{ offer.id }}">
+                    <a class="offer" href="/gallery/{{ offer.artist_id }}">
                         <b>{{ offer.title }}</b>
                         <p class="description">{{ offer.description }}</p>
                         <img src="{{ offer.image }}">
-                        <!-- <p class="price">{{ offer.image }}</p> -->
                         <p class="price">${{ offer.price }}</p>
                     </a>
                 {% endfor %}
