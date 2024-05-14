@@ -25,3 +25,12 @@ class ImageUploadForm(FlaskForm):
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!')
     ])
     submit = SubmitField('Upload Image')
+
+class EditPersonalDetails(FlaskForm):
+    name = StringField('Name')
+    title = StringField('Title')
+    description = TextAreaField('Description')
+    image = FileField('Profile Picture', validators=[
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!')
+    ])
+    submit = SubmitField('Save changes')

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Personal Details</h2>
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    {{ form.name.label }} {{ form.name(size=32) }}<br>
+    {{ form.title.label }} {{ form.title(size=32) }}<br>
+    {{ form.description.label }} {{ form.description(rows=4) }}<br>
+    {{ form.submit() }}
+</form>
+{% endblock %}
