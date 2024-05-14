@@ -9,7 +9,7 @@ from flask_socketio import send, join_room
 
 from . import app, db, login, socketio
 from .models import User, Session, Image, Message, Offer, Tag
-from .forms import LoginForm, SignupForm, ImageUploadForm
+from .forms import LoginForm, SignupForm, ImageUploadForm, EditPersonalDetails
 from werkzeug.utils import secure_filename
 
 @app.route('/')
@@ -27,44 +27,24 @@ def index():
     else:
         allowed_tags = [tag.id for tag in tag_list if tag.name in allowed_tags]
 
-    if sort_attribute == "new":
-        offers = db.session.query(
+    match sort_attribute:
+        case None | "new":
+            order_orientation = Offer.timestamp.desc()
+        case "old":
+            order_orientation = Offer.timestamp.asc()
+        case "cheap":
+            order_orientation = Offer.price.asc()
+        case "expensive":
+            order_orientation = Offer.price.desc()
+
+    offers = db.session.query(
                 Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
             ).order_by(
-                Offer.timestamp.desc()
+                order_orientation
             ).filter(
                 Offer.tag_id.in_(allowed_tags)
             ).all()
-    elif sort_attribute == "old":
-        offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
-            ).order_by(
-                Offer.timestamp.asc()
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
-            ).all()
-    elif sort_attribute == "cheap":
-        offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
-            ).order_by(
-                Offer.price.asc()
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
-            ).all()
-    elif sort_attribute == "expensive":
-        offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
-            ).order_by(
-                Offer.price.desc()
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
-            ).all()
-    else:
-        offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
-            ).all()
+
         
     offer_list = [
              {
@@ -237,11 +217,28 @@ def upload_image():
                 flash('No file selected.', 'error')
         else:
             flash('You must be logged in to upload images.', 'error')
-        return flask.redirect(flask.url_for('index'))
+        return flask.redirect(flask.url_for('gallery'))
 
 
     return flask.render_template('upload_image.html', form=form)
 
+@app.route('/edit_details', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditPersonalDetails()
+
+    if form.validate_on_submit():
+        user_details = User.query.get(current_user.id)
+
+        user_details.display_name = form.name.data if form.name.data else current_user.display_name
+        user_details.artist_title = form.title.data if form.title.data else current_user.artist_title
+        user_details.artist_description = form.description.data if form.description.data else current_user.artist_description
+
+        db.session.commit()
+
+        return flask.redirect(flask.url_for('gallery'))
+
+    return flask.render_template('edit_details.html', form=form)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'webp'}
