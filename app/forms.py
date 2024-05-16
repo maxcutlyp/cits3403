@@ -34,3 +34,10 @@ class EditPersonalDetails(FlaskForm):
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!')
     ])
     submit = SubmitField('Save changes')
+
+class OfferForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'webp'], 'Images only!')])
+    # form_path = StringField('Form Path') # er, later a selection of different types, not an MVP feature
+    submit = SubmitField('Add Offer')

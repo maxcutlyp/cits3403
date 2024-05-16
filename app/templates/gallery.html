@@ -16,6 +16,7 @@
         <p>{{ artist.artist_description }}</p>
         {% if artist.id == current_user.id %}
             <a href="/upload_image">Upload Image</a>
+            <a href="/add_offer">Add Offer</a>
             <a href="/edit_details">Edit Details</a>
         {% endif %}
     </div>

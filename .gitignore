@@ -19,3 +19,6 @@
 
 #Ignore images from users
 /app/static/imgs/users
+/app/static/imgs/offers
+*.kate-swp
+*.kate-swp

@@ -9,8 +9,9 @@ from flask_socketio import send, join_room
 
 from . import app, db, login, socketio
 from .models import User, Session, Image, Message, Offer, Tag
-from .forms import LoginForm, SignupForm, ImageUploadForm, EditPersonalDetails
+from .forms import LoginForm, SignupForm, ImageUploadForm, EditPersonalDetails, OfferForm
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 @app.route('/')
 def index():
@@ -221,6 +222,31 @@ def upload_image():
 
 
     return flask.render_template('upload_image.html', form=form)
+
+@app.route('/add_offer', methods=['GET', 'POST'])
+def add_offer():
+    form = OfferForm()
+    if form.validate_on_submit():
+        if form.image.data:
+            filename = secure_filename(form.image.data.filename)
+            filepath = os.path.join('app/static/imgs/offers/', filename)
+            form.image.data.save(filepath)
+        else:
+            filepath = None
+
+        offer = Offer(
+            artist_id=current_user.id,
+            timestamp=datetime.utcnow(),
+            title=form.title.data,
+            description=form.description.data,
+            image_path=filepath,
+            # form_path=form.form_path.data
+        )
+        db.session.add(offer)
+        db.session.commit()
+        flask.flash('Your offer has been created!', 'success')
+        return flask.redirect(flask.url_for('gallery'))
+    return flask.render_template('add_offer.html', title='Add Offer', form=form)
 
 @app.route('/edit_details', methods=['GET', 'POST'])
 @login_required
