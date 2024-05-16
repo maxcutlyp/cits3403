@@ -58,61 +58,16 @@
             </div>
 
             <div class="offer_grid">
-                <a class="offer" href="/">
-                    <b>Offer 1:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
+                {% for offer in offers %}
+                <a class="offer" href="{{ url_for('gallery', artistID=offer.artist_id) }}">
+                    <b>{{ offer.title }}</b>
+                    <p class="description">{{ offer.description }}</p>
+                    <img src="{{ url_for('static', filename=offer.image_path) }}">
+                    <p class="price">${{ '%.2f' % offer.min_price }}</p>
                 </a>
-                <a class="offer" href="/">
-                    <b>Offer 2:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 3:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 4:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 5:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 6:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 7:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 8:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-                <a class="offer" href="/">
-                    <b>Offer 9:</b>
-                    <p class="description">A short description of the offer to convey some key details. Can handle up to a few lines of text which should be enough for most users.</p>
-                    <img src="/static/imgs/society.jpg">
-                    <p class="price">$10.00</p>
-                </a>
-            </div>
+                {% endfor %}
+</div>
+
         </div>
     </body>
 </html>

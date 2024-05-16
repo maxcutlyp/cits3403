@@ -44,23 +44,13 @@ def index():
                 Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.min_price, Offer.max_price
             ).order_by(
                 order_orientation
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
+            #).filter(
+            #    Offer.tag_id.in_(allowed_tags)   #Filtering appears to be broken at the very moment, so this is commented out
             ).all()
+    #offers_data = [offer.to_dict() for offer in offers]  #use if timestamp is needed in html document
+    print(offers);
 
-        
-    offer_list = [
-             {
-                 'title': offer.title,
-                 'description': offer.description,
-                 'artist_id': offer.artist_id,
-                 'image': 'data:image/png;base64,' + base64.b64encode(offer.image_path).decode('utf-8'),
-                 'price': f"{offer.price:.2f}",
-             }
-             for offer in offers
-         ]
-
-    return flask.render_template('index.html', tags=tag_names, offers=offer_list)
+    return flask.render_template('index.html', tags=tag_names, offers=offers)
 
 
 @app.route('/login', methods=['GET', 'POST'])
