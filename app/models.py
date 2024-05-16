@@ -64,8 +64,22 @@ class Offer(db.Model):
     description = db.Column(db.Text, nullable=False)
     form_path = db.Column(db.Text) #path to form template for submitting initial user request (not implemented yet)
     image_path = db.Column(db.String, nullable=False)
-    # price = db.Column(db.Float, nullable=False) # Annoyingly, price might vary for multiple reasons, and setting a single variable isn't quite possible
+    min_price = db.Column(db.Float, nullable=False) # Annoyingly, price might vary for multiple reasons, and setting a single variable isn't quite possible, so we'll let the user set a range of prices instead
+    max_price = db.Column(db.Float, nullable=False)
     tag_id = db.Column(db.Integer, db.ForeignKey('tag.id'))
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "artist_id": self.artist_id,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "title": self.title,
+            "description": self.description,
+            "form_path": self.form_path,
+            "image_path": self.image_path,
+            "min_price": float(self.min_price) if self.min_price is not None else None,
+            "max_price": float(self.max_price) if self.max_price is not None else None,
+            "tag_id": self.tag_id,
+        }
 
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

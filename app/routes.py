@@ -34,12 +34,14 @@ def index():
         case "old":
             order_orientation = Offer.timestamp.asc()
         case "cheap":
-            order_orientation = Offer.price.asc()
+            order_orientation = Offer.min_price.asc()
         case "expensive":
-            order_orientation = Offer.price.desc()
+            order_orientation = Offer.min_price.desc()
+
+
 
     offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path#, Offer.price
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.min_price, Offer.max_price
             ).order_by(
                 order_orientation
             ).filter(
@@ -177,12 +179,13 @@ def gallery(artistID):
         artistID = current_user.id
 
     offers = Offer.query.filter_by(artist_id=artistID).all()
+    offers_data = [offer.to_dict() for offer in offers]
     images = Image.query.filter_by(artist_id=artistID).all()
     artist = User.query.get(artistID)
 
     if not artist:
         return "Artist not found", 404
-    return flask.render_template('gallery.html', images=images, artist=artist, offers=offers)
+    return flask.render_template('gallery.html', images=images, artist=artist, offers=offers_data)
 
 #Place to add an image to the database
 @app.route('/upload_image', methods=['GET', 'POST'])
@@ -242,6 +245,8 @@ def add_offer():
             description=form.description.data,
             image_path=filepath,
             # form_path=form.form_path.data
+            min_price=0.0,
+            max_price=0.0 #SET LATER
         )
         db.session.add(offer)
         db.session.commit()
