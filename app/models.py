@@ -62,8 +62,9 @@ class Offer(db.Model):
     timestamp = db.Column(db.DateTime, nullable=False)
     title = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=False)
+    form_path = db.Column(db.Text) #path to form template for submitting initial user request
     image_path = db.Column(db.BLOB, nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Float, nullable=False) # Annoyingly, price might vary for multiple reasons, and setting a single variable isn't quite possible
     tag_id = db.Column(db.Integer, db.ForeignKey('tag.id'))
 
 class Tag(db.Model):
