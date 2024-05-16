@@ -23,12 +23,14 @@ function openOfferModal(offerId) {
     document.getElementById('modalTitle').textContent = selectedOffer.title;
     document.getElementById('modalDescription').textContent = selectedOffer.description;
 
-    const messageInput = document.getElementById('contact-artist-message')
-    messageInput.hidden = false;
-    messageInput.disabled = false;
-    const sendBtn = document.getElementById('contact-artist-btn')
-    sendBtn.disabled = false;
-    sendBtn.value = 'Send (Ctrl+Enter)'
+    if (!isSelf) {
+        const messageInput = document.getElementById('contact-artist-message')
+        messageInput.hidden = false;
+        messageInput.disabled = false;
+        const sendBtn = document.getElementById('contact-artist-btn')
+        sendBtn.disabled = false;
+        sendBtn.value = 'Send (Ctrl+Enter)'
+    }
 
     var myModal = new bootstrap.Modal(document.getElementById('offerModal'), {
         keyboard: false
@@ -83,10 +85,12 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.hidden = true;
     });
 
-    document.getElementById('contact-artist-btn').addEventListener('click', sendMessageFromInput)
-    document.getElementById('contact-artist-message').addEventListener('keydown', e => {
-        if (e.key === 'Enter' && e.ctrlKey) {
-            sendMessageFromInput()
-        }
-    })
+    if (!isSelf) {
+        document.getElementById('contact-artist-btn').addEventListener('click', sendMessageFromInput)
+        document.getElementById('contact-artist-message').addEventListener('keydown', e => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                sendMessageFromInput()
+            }
+        })
+    }
 })
