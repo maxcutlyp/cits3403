@@ -26,7 +26,7 @@
             <div class="carousel-container">
                 {% for offer in offers %}
                     <div class="slide" onclick="openModal('{{ offer.id }}')">
-                        <img src="{{ offer.image_path }}" alt="{{ offer.title }}">
+                        <img src="{{ url_for('static', filename=offer.image_path) }}" alt="{{ offer.title }}">
                     </div>
                 {% endfor %}
             </div>

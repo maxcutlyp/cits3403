@@ -39,7 +39,7 @@ def index():
             order_orientation = Offer.price.desc()
 
     offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path#, Offer.price
             ).order_by(
                 order_orientation
             ).filter(
@@ -230,8 +230,8 @@ def add_offer():
     if form.validate_on_submit():
         if form.image.data:
             filename = secure_filename(form.image.data.filename)
-            filepath = os.path.join('static/imgs/offers/', filename)
-            form.image.data.save(os.path.join('app/', filepath))
+            filepath = os.path.join('imgs/offers/', filename)
+            form.image.data.save(os.path.join('app/static/', filepath))
         else:
             filepath = None
 
