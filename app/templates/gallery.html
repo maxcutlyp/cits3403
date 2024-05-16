@@ -4,6 +4,10 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+    <script src="{{ url_for('static', filename='gallery.js') }}"></script>
+    <script>
+        const offer = {{ offers|tojson }}
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -30,24 +34,6 @@
                     </div>
                 {% endfor %}
             </div>
-        <!-- JavaScript to manage the carousel navigation -->
-        <script>
-        const carouselContainer = document.querySelector(".carousel-container");
-        const slides = [...document.querySelectorAll(".slide")];
-        let currentSlideIndex = 0;
-
-        function nextSlide() {
-            currentSlideIndex = (currentSlideIndex + 1) % slides.length; // Move to the next slide
-            const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
-            slides.forEach(slide => slide.style.transform = translateValue);
-        }
-
-        function prevSlide() {
-            currentSlideIndex = currentSlideIndex > 0 ? currentSlideIndex - 1 : slides.length - 1; // Move to the previous slide
-            const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
-            slides.forEach(slide => slide.style.transform = translateValue);
-        }
-        </script>
         <!-- Add the arrow buttons for navigation -->
         <button id="left-arrow" onclick="prevSlide();"><</button>
         <button id="right-arrow" onclick="nextSlide();">></button>
@@ -62,7 +48,7 @@
         </div>
     </div>
 
-    <div id="imageModal">
+    <div id="imageModal" hidden>
         <div class="modal-content">
             <img id="enlargedImage" src="" alt="Enlarged Image">
             <div class="image-description">
@@ -100,44 +86,5 @@
         </div>
         </div>
     </div>
-
-        <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const galleryImages = document.querySelectorAll('.gallery img');
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('enlargedImage');
-            const modalTitle = document.getElementById('imageTitle');
-            const modalDesc = document.getElementById('imageDesc');
-
-            galleryImages.forEach(img => {
-                img.addEventListener('click', function () {
-                    modal.style.display = 'block';
-                    modalImage.src = this.src;
-                    modalTitle.textContent = this.alt;
-                    modalDesc.textContent = 'Description for ' + this.alt;
-                });
-            });
-
-            modal.addEventListener('click', function () {
-                modal.style.display = 'none';
-            });
-
-            modal.style.display = 'none';
-        });
-
-        function openOfferModal(offerId) {
-            const offer = {{ offers|tojson }};
-            const selectedOffer = offer.find(o => o.id == offerId);
-
-            document.getElementById('modalImage').src = `/static/${selectedOffer.image_path}`;
-            document.getElementById('modalTitle').textContent = selectedOffer.title;
-            document.getElementById('modalDescription').textContent = selectedOffer.description;
-
-            var myModal = new bootstrap.Modal(document.getElementById('offerModal'), {
-            keyboard: false
-        });
-    myModal.show();
-}
-        </script>
 {% endblock %}
 
