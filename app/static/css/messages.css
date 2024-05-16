@@ -10,33 +10,48 @@
     }
 }
 
-/* TODO: add these resets to global style */
-:root {
+body {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    height: 100vh;
+
+    background-color: Canvas;
+    color: currentColor;
+
     font-family: system-ui;
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
-}
-
-body {
+#content {
     display: grid;
     grid-template-columns: 25% 1fr;
+    overflow-y: auto;
+}
+
+.heading {
+    background-color: Canvas;
+    color: currentColor;
+    border-bottom: 1px solid gray;
+}
+
+.heading a {
+    background-color: color-mix(in hsl, Canvas, gray 30%);
+}
+.heading a:hover {
+    background-color: color-mix(in hsl, Canvas, gray 50%);
 }
 
 .sidebar > h1 {
     padding: 1rem 1rem;
     border-block-end: 1px solid grey;
+    margin: 0;
 }
 
 .sidebar {
-    height: 100vh;
     display: grid;
     grid-template-rows: auto 1fr;
     border-inline-end: 1px solid grey;
+    overflow-y: auto;
 }
 
 .sidebar > .items {
@@ -72,9 +87,9 @@ body {
 
 
 .messages-wrapper {
-    height: 100vh;
     display: grid;
     grid-template-rows: 1fr auto;
+    overflow-y: auto;
 }
 
 .messages {
@@ -138,3 +153,4 @@ body {
 .empty-notifier {
     place-self: center;
 }
+
