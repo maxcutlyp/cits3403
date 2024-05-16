@@ -1,6 +1,5 @@
 <!-- App Homepage -->
 {% extends "base.html" %}
-
 {% block content %}
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -23,7 +22,7 @@
 <html>
     <head>
         <title>[Website Name]</title>
-        <link rel="stylesheet" href="/static/homepage.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
     </head>
     <body class="background">
         <div class="page_grid">
@@ -117,4 +116,5 @@
         </div>
     </body>
 </html>
+
 {% endblock %}

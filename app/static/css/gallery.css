@@ -27,6 +27,21 @@
     border-radius: 50%;
 }
 
+#sidebar a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 6px;
+    background-color: #c2c2c2;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+#sidebar a:hover {
+    background-color: #a2a2a2;
+}
+
 .back-home {
     text-decoration: none;
     display: inline-block;

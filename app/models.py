@@ -49,9 +49,23 @@ class Message(db.Model):
     user_to = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, nullable=False)
     text_content = db.Column(db.Text, nullable=False)
+    is_read = db.Column(db.Integer, nullable=False, default=0)
     # TODO: attachments e.g. images
 
     __table_args__ = (
         db.CheckConstraint('user_from != user_to'),
     )
 
+class Offer(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
+    title = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    image_path = db.Column(db.BLOB, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tag.id'))
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)

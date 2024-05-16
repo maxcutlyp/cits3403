@@ -2,18 +2,62 @@ import flask
 import os
 import datetime
 import time
+import base64
 
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_socketio import send, join_room
 
 from . import app, db, login, socketio
-from .models import User, Session, Image, Message
-from .forms import LoginForm, SignupForm, ImageUploadForm
+from .models import User, Session, Image, Message, Offer, Tag
+from .forms import LoginForm, SignupForm, ImageUploadForm, EditPersonalDetails
 from werkzeug.utils import secure_filename
 
 @app.route('/')
 def index():
-    return flask.render_template('index.html')
+
+    sort_attribute = flask.request.args.get('sort')
+    allowed_tags = flask.request.args.getlist('tags')
+
+    tag_list = Tag.query.all()
+
+    tag_names = [tag.name for tag in tag_list]
+
+    if allowed_tags == []:
+        allowed_tags = [tag.id for tag in tag_list]
+    else:
+        allowed_tags = [tag.id for tag in tag_list if tag.name in allowed_tags]
+
+    match sort_attribute:
+        case None | "new":
+            order_orientation = Offer.timestamp.desc()
+        case "old":
+            order_orientation = Offer.timestamp.asc()
+        case "cheap":
+            order_orientation = Offer.price.asc()
+        case "expensive":
+            order_orientation = Offer.price.desc()
+
+    offers = db.session.query(
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+            ).order_by(
+                order_orientation
+            ).filter(
+                Offer.tag_id.in_(allowed_tags)
+            ).all()
+
+        
+    offer_list = [
+             {
+                 'title': offer.title,
+                 'description': offer.description,
+                 'artist_id': offer.artist_id,
+                 'image': 'data:image/png;base64,' + base64.b64encode(offer.image_path).decode('utf-8'),
+                 'price': f"{offer.price:.2f}",
+             }
+             for offer in offers
+         ]
+
+    return flask.render_template('index.html', tags=tag_names, offers=offer_list)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -86,14 +130,25 @@ def route_messages(user_id: int | None):
             )\
             .order_by(db.desc(Message.timestamp))\
             .all()
+        
+        messages_to_read = Message.query\
+            .filter(
+                ((Message.user_from == user_id) & (Message.user_to == current_user.id))
+            )\
+            .order_by(db.desc(Message.timestamp))\
+            .all()
+        
+
+        for msg in messages_to_read:
+            msg.is_read = 1
+        
+        db.session.commit()
 
         months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         day_endings = ["st", "nd", "rd"] + ["th" for _ in range(28)]
 
         curr_day = datetime.datetime.now().day
         curr_month = datetime.datetime.now().month
-        print(curr_day, curr_month)
-        print(messages[0].timestamp.day, messages[0].timestamp.month)
 
         messages_processed = [
             {
@@ -162,11 +217,28 @@ def upload_image():
                 flash('No file selected.', 'error')
         else:
             flash('You must be logged in to upload images.', 'error')
-        return flask.redirect(flask.url_for('index'))
+        return flask.redirect(flask.url_for('gallery'))
 
 
     return flask.render_template('upload_image.html', form=form)
 
+@app.route('/edit_details', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditPersonalDetails()
+
+    if form.validate_on_submit():
+        user_details = User.query.get(current_user.id)
+
+        user_details.display_name = form.name.data if form.name.data else current_user.display_name
+        user_details.artist_title = form.title.data if form.title.data else current_user.artist_title
+        user_details.artist_description = form.description.data if form.description.data else current_user.artist_description
+
+        db.session.commit()
+
+        return flask.redirect(flask.url_for('gallery'))
+
+    return flask.render_template('edit_details.html', form=form)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -185,10 +257,19 @@ def get_recents_processed():
             Message.user_to,
             db.func.max(Message.timestamp).label('timestamp'),
             Message.text_content,
+            Message.is_read
         )\
         .filter((Message.user_from == current_user.id) | (Message.user_to == current_user.id))\
         .group_by(Message.user_from, Message.user_to)\
         .order_by(db.desc('timestamp'))\
+        .all()
+    
+    received_messages = db.session.query(
+        Message.user_from,
+        Message.is_read,
+        )\
+        .filter((Message.user_to == current_user.id))\
+        .order_by(db.desc(Message.timestamp))\
         .all()
 
     # `recents` contains both the most recent message sent from `current_user` to every
@@ -213,11 +294,16 @@ def get_recents_processed():
         seen_pairs.add((message.user_to, message.user_from))
         i += 1
 
+    read_users = {msg.user_from: 1 for msg in received_messages}
+    for msg in received_messages:
+        read_users[msg.user_from] = min(read_users[msg.user_from], (msg.is_read == 1))
+
     recent_data = [
         {
             'user_id': (other_user_id := ({ message.user_from, message.user_to } - { current_user.id }).pop()),
             'display_name': User.query.get(other_user_id).display_name,
             'preview': message.text_content,
+            'is_read': read_users[other_user_id],
         }
         for message in recents
     ]

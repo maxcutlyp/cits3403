@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.page_grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    height: 100%;
+}
+
+.heading {
+    height: 80px;
+    background-color: #cbcbcb;
+    text-align: left;
+    grid-column: span 2;
+}
+
+.heading title {
+    display: inline-block;
+    font-size: 40px;
+    padding: 10px;
+}
+
+.heading a {
+    padding: 12px 20px 12px 20px;
+    margin: 18px 25px 0px 0px;
+    float: right;
+    right: 100px;
+    text-decoration: none;
+    color: currentColor;
+    background-color: #b7b7b7;
+    border-radius: 5px;
+}
+
+.heading a:hover {
+    background-color: #8e8e8e;
+}
+
+.sidebar {
+    padding: 0.75rem;
+    background-color: #111312;
+    color: #cbcbcb;
+    overflow-y: auto;
+    gap: 0.5rem;
+}
+
+.sidebar label {
+    padding: 30px 0px 0px 0px;
+    text-decoration: none;
+    font-size: 30px;
+    display: block;
+}
+
+.sidebar li {
+    padding: 5px 8px 6px 0px;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+}
+
+.sidebar form {
+    padding: 10px 0px 0px 0px;
+}
+
+.sidebar input {
+    padding: 2px 5px 2px 5px;
+    margin-top: 1rem;
+    margin-right: 0.5rem;
+}
+
+.sidebar button {
+    align-self: center;
+    justify-self: center;
+}
+
+.offer_grid {
+    padding-inline: 2rem;
+    padding-block: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 2%;
+    row-gap: 20px;
+    overflow-y: auto;
+}
+
+.offer_grid .offer {
+    display: grid;
+    background-color: #cbcbcb;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.offer:hover {
+    background-color: #8e8e8e;
+}
+
+.offer b {
+    padding: 0.5rem;
+    font-size: 20px;
+    color: #000000;
+}
+
+.offer p.description {
+    padding: 0.5rem;
+    color: #000000;
+}
+
+.offer img {
+    max-width: 100%;
+    padding: 0.5rem;
+}
+
+.offer p.price {
+    padding: 0.5rem;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 500;
+    color: #000000;
+}
+
+.background{
+    background-color: #1E1E1E;
+    font-family: system-ui;
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+}
+
+#content {
+    overflow-y: auto;
+}
