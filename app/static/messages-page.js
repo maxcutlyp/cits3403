@@ -1,16 +1,3 @@
-let socket
-
-// This function can be used elsewhere, e.g. on other pages to start a conversation
-const send_message = async (to_id, message, server_ack) => {
-    socket.emit('json',
-        {
-            'to': to_id,
-            'message': message,
-        },
-        server_ack,
-    )
-}
-
 const talking_to = () => {
     const to = Number.parseInt(window.location.pathname.split('/').pop())
     if (Number.isNaN(to)) {
@@ -35,7 +22,7 @@ const send_message_from_input = async () => {
 
     add_message_to_chat(false, message, hours + ":" + minutes)
 
-    await send_message(talking_to(), message, update_sidebar)
+    await send_message(message, talking_to(), update_sidebar)
 
     message_input.value = ''
 }
@@ -84,10 +71,10 @@ const update_sidebar = async () => {
     document.getElementById('messages-sidebar').outerHTML = await resp.text()
 }
 
-const ws_json = async (json) => {
+const receive_message = async (message, user_id, display_name) => {
     update_sidebar() // don't await, let it run in the background
 
-    if (json.from.id !== talking_to()) {
+    if (user_id !== talking_to()) {
         // TODO: notification?
         return
     }
@@ -97,13 +84,10 @@ const ws_json = async (json) => {
     var hours = currentDate.getHours();
     var minutes = currentDate.getMinutes();
 
-    add_message_to_chat(true, json.message, hours + ":" + minutes)
+    add_message_to_chat(true, message, hours + ":" + minutes)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    socket = io()
-    socket.on('json', ws_json)
-
     document.getElementById('send-btn')?.addEventListener('click', send_message_from_input)
     document.getElementById('message-input')?.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
