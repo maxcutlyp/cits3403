@@ -4,6 +4,13 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='gallery.js') }}"></script>
+    <script src="{{ url_for('static', filename='message-utils.js') }}"></script>
+    <script>
+        const isSelf = {{ (artist.id == current_user.id)|tojson }} {# tojson to turn True/False -> true/false #}
+        const offer = {{ offers|tojson }}
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -15,9 +22,9 @@
         <h4>{{ artist.artist_title }}</h4>
         <p>{{ artist.artist_description }}</p>
         {% if artist.id == current_user.id %}
-            <a href="/upload_image">Upload Image</a>
-            <a href="/add_offer">Add Offer</a>
-            <a href="/edit_details">Edit Details</a>
+            <a class="button" href="/upload_image">Upload Image</a>
+            <a class="button" href="/add_offer">Add Offer</a>
+            <a class="button" href="/edit_details">Edit Details</a>
         {% endif %}
     </div>
 
@@ -30,24 +37,6 @@
                     </div>
                 {% endfor %}
             </div>
-        <!-- JavaScript to manage the carousel navigation -->
-        <script>
-        const carouselContainer = document.querySelector(".carousel-container");
-        const slides = [...document.querySelectorAll(".slide")];
-        let currentSlideIndex = 0;
-
-        function nextSlide() {
-            currentSlideIndex = (currentSlideIndex + 1) % slides.length; // Move to the next slide
-            const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
-            slides.forEach(slide => slide.style.transform = translateValue);
-        }
-
-        function prevSlide() {
-            currentSlideIndex = currentSlideIndex > 0 ? currentSlideIndex - 1 : slides.length - 1; // Move to the previous slide
-            const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
-            slides.forEach(slide => slide.style.transform = translateValue);
-        }
-        </script>
         <!-- Add the arrow buttons for navigation -->
         <button id="left-arrow" onclick="prevSlide();"><</button>
         <button id="right-arrow" onclick="nextSlide();">></button>
@@ -62,7 +51,7 @@
         </div>
     </div>
 
-    <div id="imageModal">
+    <div id="imageModal" hidden>
         <div class="modal-content">
             <img id="enlargedImage" src="" alt="Enlarged Image">
             <div class="image-description">
@@ -88,11 +77,14 @@
                         <div class="col-md-6">
                             <h4 id="modalTitle"></h4>
                             <p id="modalDescription"></p>
-                            <!-- Contact form here -->
-                            <form>
-                                <!-- Form fields -->
-                                <button type="submit" class="btn btn-primary">Contact</button>
-                            </form>
+                            {% if artist.id != current_user.id %}
+                                <div class="contact">
+                                    <textarea placeholder="Message artist..." id="contact-artist-message"></textarea>
+                                    <input type="button" id="contact-artist-btn" class="button" value="Send (Ctrl+Enter)">
+                                </div>
+                            {% else %}
+                                {# TODO: Maybe an "edit offer" button? #}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -100,44 +92,5 @@
         </div>
         </div>
     </div>
-
-        <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const galleryImages = document.querySelectorAll('.gallery img');
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('enlargedImage');
-            const modalTitle = document.getElementById('imageTitle');
-            const modalDesc = document.getElementById('imageDesc');
-
-            galleryImages.forEach(img => {
-                img.addEventListener('click', function () {
-                    modal.style.display = 'block';
-                    modalImage.src = this.src;
-                    modalTitle.textContent = this.alt;
-                    modalDesc.textContent = 'Description for ' + this.alt;
-                });
-            });
-
-            modal.addEventListener('click', function () {
-                modal.style.display = 'none';
-            });
-
-            modal.style.display = 'none';
-        });
-
-        function openOfferModal(offerId) {
-            const offer = {{ offers|tojson }};
-            const selectedOffer = offer.find(o => o.id == offerId);
-
-            document.getElementById('modalImage').src = `/static/${selectedOffer.image_path}`;
-            document.getElementById('modalTitle').textContent = selectedOffer.title;
-            document.getElementById('modalDescription').textContent = selectedOffer.description;
-
-            var myModal = new bootstrap.Modal(document.getElementById('offerModal'), {
-            keyboard: false
-        });
-    myModal.show();
-}
-        </script>
 {% endblock %}
 

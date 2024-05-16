@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof receive_message === 'function') {
             receive_message(data.message, data.from.id, data.from.display_name)
         } else {
-            console.log(`Received message, no handler: ${data}`)
+            console.log(`Received message, no handler: ${JSON.stringify(data)}`)
         }
     })
 })
