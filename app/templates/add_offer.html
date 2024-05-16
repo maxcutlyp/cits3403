@@ -26,6 +26,10 @@
             {% endfor %}
         </div>
         <div>
+            {{ form.tag.label }}<br>
+            {{ form.tag() }}<br>
+        </div>
+        <div>
             {{ form.submit() }}
         </div>
     </form>

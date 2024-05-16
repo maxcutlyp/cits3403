@@ -22,10 +22,7 @@ def index():
 
     tag_names = [tag.name for tag in tag_list]
 
-    if allowed_tags == []:
-        allowed_tags = [tag.id for tag in tag_list]
-    else:
-        allowed_tags = [tag.id for tag in tag_list if tag.name in allowed_tags]
+    allowed_tags = [tag.id for tag in tag_list if tag.name in allowed_tags]
 
     match sort_attribute:
         case None | "new":
@@ -37,15 +34,16 @@ def index():
         case "expensive":
             order_orientation = Offer.min_price.desc()
 
+    query = db.session.query(
+        Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.min_price, Offer.max_price
+    ).order_by(
+        order_orientation
+    )
 
+    if allowed_tags:
+        query = query.filter(Offer.tag_id.in_(allowed_tags))
 
-    offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.min_price, Offer.max_price
-            ).order_by(
-                order_orientation
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
-            ).all()
+    offers = query.all()
     
     return flask.render_template('index.html', tags=tag_names, offers=offers)
 
@@ -216,7 +214,13 @@ def upload_image():
 
 @app.route('/add_offer', methods=['GET', 'POST'])
 def add_offer():
+
+    tag_list = Tag.query.all()
+    
     form = OfferForm()
+
+    form.tag.choices = [(tag.id, tag.name) for tag in tag_list]
+
     if form.validate_on_submit():
         if form.image.data:
             filename = secure_filename(form.image.data.filename)
@@ -233,13 +237,14 @@ def add_offer():
             image_path=filepath,
             # form_path=form.form_path.data
             min_price=0.0,
-            max_price=0.0 #SET LATER
+            max_price=0.0, #SET LATER
+            tag_id=form.tag.data
         )
         db.session.add(offer)
         db.session.commit()
         flask.flash('Your offer has been created!', 'success')
         return flask.redirect(flask.url_for('gallery'))
-    return flask.render_template('add_offer.html', title='Add Offer', form=form)
+    return flask.render_template('add_offer.html', title='Add Offer', form=form, tags=tag_list)
 
 @app.route('/edit_details', methods=['GET', 'POST'])
 @login_required
