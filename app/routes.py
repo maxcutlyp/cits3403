@@ -11,7 +11,6 @@ from . import app, db, login, socketio
 from .models import User, Session, Image, Message, Offer, Tag
 from .forms import LoginForm, SignupForm, ImageUploadForm, EditPersonalDetails, OfferForm
 from werkzeug.utils import secure_filename
-from datetime import datetime
 
 @app.route('/')
 def index():
@@ -230,7 +229,7 @@ def add_offer():
 
         offer = Offer(
             artist_id=current_user.id,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.datetime.utcnow(),
             title=form.title.data,
             description=form.description.data,
             image_path=filepath,
