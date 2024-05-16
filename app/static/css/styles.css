@@ -12,7 +12,6 @@ body, html {
     height: 80px;
     background-color: #cbcbcb;
     text-align: left;
-    grid-column: span 2;
 }
 
 .heading title {

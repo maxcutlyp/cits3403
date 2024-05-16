@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, StringField, SubmitField, PasswordField, TextAreaField, FileField
+from wtforms import EmailField, StringField, SubmitField, PasswordField, TextAreaField, FileField, SelectField
 from wtforms.validators import InputRequired, EqualTo
 from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileRequired, FileAllowed
@@ -40,4 +40,5 @@ class OfferForm(FlaskForm):
     description = TextAreaField('Description', validators=[DataRequired()])
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'webp'], 'Images only!')])
     # form_path = StringField('Form Path') # er, later a selection of different types, not an MVP feature
+    tag = SelectField('Tag')
     submit = SubmitField('Add Offer')
