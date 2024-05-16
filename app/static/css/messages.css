@@ -13,6 +13,7 @@
 body {
     display: grid;
     grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
     height: 100vh;
 
     background-color: Canvas;
@@ -27,10 +28,17 @@ body {
     overflow-y: auto;
 }
 
-.navbar {
+.heading {
     background-color: Canvas;
     color: currentColor;
     border-bottom: 1px solid gray;
+}
+
+.heading a {
+    background-color: color-mix(in hsl, Canvas, gray 30%);
+}
+.heading a:hover {
+    background-color: color-mix(in hsl, Canvas, gray 50%);
 }
 
 .sidebar > h1 {
