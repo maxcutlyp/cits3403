@@ -8,6 +8,34 @@ body, html {
     font-family: Arial, sans-serif;
 }
 
+.heading {
+    height: 80px;
+    background-color: #cbcbcb;
+    text-align: left;
+    grid-column: span 2;
+}
+
+.heading title {
+    display: inline-block;
+    font-size: 40px;
+    padding: 10px;
+}
+
+.heading a {
+    padding: 12px 20px 12px 20px;
+    margin: 18px 25px 0px 0px;
+    float: right;
+    right: 100px;
+    text-decoration: none;
+    color: currentColor;
+    background-color: #b7b7b7;
+    border-radius: 5px;
+}
+
+.heading a:hover {
+    background-color: #8e8e8e;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;

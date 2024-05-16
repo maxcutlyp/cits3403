@@ -9,8 +9,9 @@ from flask_socketio import send, join_room
 
 from . import app, db, login, socketio
 from .models import User, Session, Image, Message, Offer, Tag
-from .forms import LoginForm, SignupForm, ImageUploadForm, EditPersonalDetails
+from .forms import LoginForm, SignupForm, ImageUploadForm, EditPersonalDetails, OfferForm
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 @app.route('/')
 def index():
@@ -33,31 +34,23 @@ def index():
         case "old":
             order_orientation = Offer.timestamp.asc()
         case "cheap":
-            order_orientation = Offer.price.asc()
+            order_orientation = Offer.min_price.asc()
         case "expensive":
-            order_orientation = Offer.price.desc()
+            order_orientation = Offer.min_price.desc()
+
+
 
     offers = db.session.query(
-                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.price
+                Offer.title, Offer.description, Offer.artist_id, Offer.image_path, Offer.min_price, Offer.max_price
             ).order_by(
                 order_orientation
-            ).filter(
-                Offer.tag_id.in_(allowed_tags)
+            #).filter(
+            #    Offer.tag_id.in_(allowed_tags)   #Filtering appears to be broken at the very moment, so this is commented out
             ).all()
+    #offers_data = [offer.to_dict() for offer in offers]  #use if timestamp is needed in html document
+    print(offers);
 
-        
-    offer_list = [
-             {
-                 'title': offer.title,
-                 'description': offer.description,
-                 'artist_id': offer.artist_id,
-                 'image': 'data:image/png;base64,' + base64.b64encode(offer.image_path).decode('utf-8'),
-                 'price': f"{offer.price:.2f}",
-             }
-             for offer in offers
-         ]
-
-    return flask.render_template('index.html', tags=tag_names, offers=offer_list)
+    return flask.render_template('index.html', tags=tag_names, offers=offers)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -175,12 +168,14 @@ def gallery(artistID):
     if artistID is None:
         artistID = current_user.id
 
+    offers = Offer.query.filter_by(artist_id=artistID).all()
+    offers_data = [offer.to_dict() for offer in offers]
     images = Image.query.filter_by(artist_id=artistID).all()
     artist = User.query.get(artistID)
 
     if not artist:
         return "Artist not found", 404
-    return flask.render_template('gallery.html', images=images, artist=artist)
+    return flask.render_template('gallery.html', images=images, artist=artist, offers=offers_data)
 
 #Place to add an image to the database
 @app.route('/upload_image', methods=['GET', 'POST'])
@@ -197,12 +192,12 @@ def upload_image():
             if filename != '':
                 try:
                     username = current_user.display_name
-                    folder_path = os.path.join('app/static/imgs/users/', current_user.id)
+                    folder_path = os.path.join('app/static/imgs/users/', str(current_user.id))
                     os.makedirs(folder_path, exist_ok=True)
                     image_file.save(os.path.join(folder_path, filename))
 
                     new_image = Image(
-                        image_path=os.path.join('imgs/users/', current_user.id, filename),
+                        image_path=os.path.join('imgs/users/', str(current_user.id), filename),
                         title=form.title.data,
                         description=form.description.data,
                         artist_id=current_user.id
@@ -221,6 +216,33 @@ def upload_image():
 
 
     return flask.render_template('upload_image.html', form=form)
+
+@app.route('/add_offer', methods=['GET', 'POST'])
+def add_offer():
+    form = OfferForm()
+    if form.validate_on_submit():
+        if form.image.data:
+            filename = secure_filename(form.image.data.filename)
+            filepath = os.path.join('imgs/offers/', filename)
+            form.image.data.save(os.path.join('app/static/', filepath))
+        else:
+            filepath = None
+
+        offer = Offer(
+            artist_id=current_user.id,
+            timestamp=datetime.utcnow(),
+            title=form.title.data,
+            description=form.description.data,
+            image_path=filepath,
+            # form_path=form.form_path.data
+            min_price=0.0,
+            max_price=0.0 #SET LATER
+        )
+        db.session.add(offer)
+        db.session.commit()
+        flask.flash('Your offer has been created!', 'success')
+        return flask.redirect(flask.url_for('gallery'))
+    return flask.render_template('add_offer.html', title='Add Offer', form=form)
 
 @app.route('/edit_details', methods=['GET', 'POST'])
 @login_required

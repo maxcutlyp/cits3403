@@ -18,5 +18,7 @@
 .DS_Store
 
 #Ignore images from users
-/static/imgs/users/
-./static/imgs/users/*
+/app/static/imgs/users
+/app/static/imgs/offers
+*.kate-swp
+*.kate-swp

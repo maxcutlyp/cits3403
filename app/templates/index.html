@@ -1,44 +1,75 @@
 <!-- App Homepage -->
 {% extends "base.html" %}
-
-{% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
-{% endblock %}
-
 {% block content %}
-<body class="background">
-    <div class="page_grid">
-        <div class="sidebar">
-            <form>
-                <label>Sort By:</label>
-                <select name="sort" id="sort">
-                    <option value="new">Date Added - Newest</option>
-                    <option value="old">Date Added - Oldest</option>
-                    <option value="cheap">Price - Low To High</option>
-                    <option value="expensive">Price - High To Low</option>
-                </select>                
-                <label>Tags:</label>
-                <select name="tags" id="tags" multiple>
-                    {% for tag in tags %}
-                        <option type="checkbox">{{ tag }}</option>
-                    {% endfor %}
-                </select>
-                <div></div>
-                <input type="submit" value="Update">
-            </form>
-        </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h1>Hello, {{ current_user.display_name or 'world' }}!</h1>
 
-        <div class="offer_grid">
-            {% for offer in offers %}
-                <a class="offer" href="/gallery/{{ offer.artist_id }}">
+    <p>Welcome to our CITS3403 project.</p>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <p>Please <a href="{{ url_for('login') }}">sign in</a>.</p>
+        {% endif %}
+
+<!DOCTYPE html>
+<!-- TODO: Change website name-->
+<html>
+    <head>
+        <title>[Website Name]</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+    </head>
+    <body class="background">
+        <div class="page_grid">
+            <div class="sidebar">
+                <label>Sort By:</label>
+                <form>
+                    <select name="sort" id="sort">
+                        <option value="new">Date Added - Newest</option>
+                        <option value="old">Date Added - Oldest</option>
+                        <option value="cheap">Price - Low To High</option>
+                        <option value="expensive">Price - High To Low</option>
+                    </select>
+                    <div>
+                        <input type="submit" value="Sort">
+                    </div>
+                </form>
+                
+                <label>Tags:</label>
+                <ul>
+                    <li><input type="checkbox">Realism</li>
+                    <li><input type="checkbox">Nature</li>
+                    <li><input type="checkbox">Fanart</li>
+                    <li><input type="checkbox">Digital</li>
+                    <li><input type="checkbox">Painting</li>
+                    <li><input type="checkbox">Still Life</li>
+                    <li><input type="checkbox">Futuristic</li>
+                    <li><input type="checkbox">Photorealism</li>
+                    <li><input type="checkbox">Collage</li>
+                    <li><input type="checkbox">Historical</li>
+                    <li><input type="checkbox">Urban</li>
+                </ul>
+                <button class="tags">Update Tags</button>
+            </div>
+
+            <div class="offer_grid">
+                {% for offer in offers %}
+                <a class="offer" href="{{ url_for('gallery', artistID=offer.artist_id) }}">
                     <b>{{ offer.title }}</b>
                     <p class="description">{{ offer.description }}</p>
-                    <img src="{{ offer.image }}">
-                    <p class="price">${{ offer.price }}</p>
+                    <img src="{{ url_for('static', filename=offer.image_path) }}">
+                    <p class="price">${{ '%.2f' % offer.min_price }}</p>
                 </a>
-            {% endfor %}
-            </a>
+                {% endfor %}
+</div>
+
         </div>
-    </div>
-</body>
+    </body>
+</html>
+
 {% endblock %}

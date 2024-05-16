@@ -16,22 +16,20 @@
         <p>{{ artist.artist_description }}</p>
         {% if artist.id == current_user.id %}
             <a href="/upload_image">Upload Image</a>
+            <a href="/add_offer">Add Offer</a>
             <a href="/edit_details">Edit Details</a>
         {% endif %}
     </div>
 
     <div class="gallery-container">
         <h2>Offers</h2>
-        <!-- The container for the offer carousel -->
-        <div class="carousel-container">
-            {% for image in images %}
-            <!-- Each image should be wrapped in a single slide div -->
-            <div class="slide">
-                <img src="{{ url_for('static', filename=image.image_path) }}" alt="{{ image.title }}">
+            <div class="carousel-container">
+                {% for offer in offers %}
+                    <div class="slide" onclick="openOfferModal('{{ offer.id }}')">
+                        <img src="{{ url_for('static', filename=offer.image_path) }}" alt="{{ offer.title }}">
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-
         <!-- JavaScript to manage the carousel navigation -->
         <script>
         const carouselContainer = document.querySelector(".carousel-container");
@@ -72,6 +70,36 @@
                 <p id="imageDesc">Image description goes here...</p>
             </div>
         </div>
+    </div>
+
+    <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="offerModalLabel">Offer Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img id="modalImage" src="" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h4 id="modalTitle"></h4>
+                            <p id="modalDescription"></p>
+                            <!-- Contact form here -->
+                            <form>
+                                <!-- Form fields -->
+                                <button type="submit" class="btn btn-primary">Contact</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 
         <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -96,6 +124,20 @@
 
             modal.style.display = 'none';
         });
+
+        function openOfferModal(offerId) {
+            const offer = {{ offers|tojson }};
+            const selectedOffer = offer.find(o => o.id == offerId);
+
+            document.getElementById('modalImage').src = `/static/${selectedOffer.image_path}`;
+            document.getElementById('modalTitle').textContent = selectedOffer.title;
+            document.getElementById('modalDescription').textContent = selectedOffer.description;
+
+            var myModal = new bootstrap.Modal(document.getElementById('offerModal'), {
+            keyboard: false
+        });
+    myModal.show();
+}
         </script>
 {% endblock %}
 
