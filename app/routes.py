@@ -231,7 +231,7 @@ def add_offer():
         if form.image.data:
             filename = secure_filename(form.image.data.filename)
             filepath = os.path.join('static/imgs/offers/', filename)
-            form.image.data.save(os.path.join('app/', filepath)
+            form.image.data.save(os.path.join('app/', filepath))
         else:
             filepath = None
 
