@@ -2,6 +2,8 @@ let carouselContainer;
 let slides;
 let currentSlideIndex = 0;
 
+let selectedOffer;
+
 function nextSlide() {
     currentSlideIndex = (currentSlideIndex + 1) % slides.length; // Move to the next slide
     const translateValue = `translateX(-${currentSlideIndex * 100}%)`;
@@ -15,16 +17,47 @@ function prevSlide() {
 }
 
 function openOfferModal(offerId) {
-    const selectedOffer = offer.find(o => o.id == offerId);
+    selectedOffer = offer.find(o => o.id == offerId);
 
     document.getElementById('modalImage').src = `/static/${selectedOffer.image_path}`;
     document.getElementById('modalTitle').textContent = selectedOffer.title;
     document.getElementById('modalDescription').textContent = selectedOffer.description;
 
+    const messageInput = document.getElementById('contact-artist-message')
+    messageInput.hidden = false;
+    messageInput.disabled = false;
+    const sendBtn = document.getElementById('contact-artist-btn')
+    sendBtn.disabled = false;
+    sendBtn.value = 'Send (Ctrl+Enter)'
+
     var myModal = new bootstrap.Modal(document.getElementById('offerModal'), {
         keyboard: false
     });
     myModal.show();
+}
+
+function sendMessageFromInput() {
+    const messageInput = document.getElementById('contact-artist-message')
+    const sendBtn = document.getElementById('contact-artist-btn')
+    const message = messageInput.value
+
+    if (message.length <= 0) {
+        return
+    }
+
+    if (selectedOffer === undefined) {
+        return
+    }
+
+    send_message(message, selectedOffer.artist_id, () => {
+        messageInput.hidden = true;
+        messageInput.value = '';
+        sendBtn.value = 'Sent!'
+    })
+
+    messageInput.disabled = true;
+    sendBtn.disabled = true;
+    sendBtn.value = 'Sending...'
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -49,4 +82,11 @@ document.addEventListener('DOMContentLoaded', function () {
     modal.addEventListener('click', function () {
         modal.hidden = true;
     });
+
+    document.getElementById('contact-artist-btn').addEventListener('click', sendMessageFromInput)
+    document.getElementById('contact-artist-message').addEventListener('keydown', e => {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            sendMessageFromInput()
+        }
+    })
 })

@@ -4,7 +4,9 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='gallery.js') }}"></script>
+    <script src="{{ url_for('static', filename='message-utils.js') }}"></script>
     <script>
         const offer = {{ offers|tojson }}
     </script>
@@ -19,9 +21,9 @@
         <h4>{{ artist.artist_title }}</h4>
         <p>{{ artist.artist_description }}</p>
         {% if artist.id == current_user.id %}
-            <a href="/upload_image">Upload Image</a>
-            <a href="/add_offer">Add Offer</a>
-            <a href="/edit_details">Edit Details</a>
+            <a class="button" href="/upload_image">Upload Image</a>
+            <a class="button" href="/add_offer">Add Offer</a>
+            <a class="button" href="/edit_details">Edit Details</a>
         {% endif %}
     </div>
 
@@ -74,11 +76,10 @@
                         <div class="col-md-6">
                             <h4 id="modalTitle"></h4>
                             <p id="modalDescription"></p>
-                            <!-- Contact form here -->
-                            <form>
-                                <!-- Form fields -->
-                                <button type="submit" class="btn btn-primary">Contact</button>
-                            </form>
+                            <div class="contact">
+                                <textarea placeholder="Message artist..." id="contact-artist-message"></textarea>
+                                <input type="button" id="contact-artist-btn" class="button" value="Send (Ctrl+Enter)">
+                            </div>
                         </div>
                     </div>
                 </div>
