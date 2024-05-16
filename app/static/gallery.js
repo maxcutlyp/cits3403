@@ -88,6 +88,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!isSelf) {
         document.getElementById('contact-artist-btn').addEventListener('click', sendMessageFromInput)
         document.getElementById('contact-artist-message').addEventListener('keydown', e => {
+            if (e.target.disabled) {
+                return
+            }
+
             if (e.key === 'Enter' && e.ctrlKey) {
                 sendMessageFromInput()
             }
