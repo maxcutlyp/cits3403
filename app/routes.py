@@ -176,12 +176,13 @@ def gallery(artistID):
     if artistID is None:
         artistID = current_user.id
 
+    offers = Offer.query.filter_by(artist_id=artistID).all()
     images = Image.query.filter_by(artist_id=artistID).all()
     artist = User.query.get(artistID)
 
     if not artist:
         return "Artist not found", 404
-    return flask.render_template('gallery.html', images=images, artist=artist)
+    return flask.render_template('gallery.html', images=images, artist=artist, offers=offers)
 
 #Place to add an image to the database
 @app.route('/upload_image', methods=['GET', 'POST'])
@@ -229,8 +230,8 @@ def add_offer():
     if form.validate_on_submit():
         if form.image.data:
             filename = secure_filename(form.image.data.filename)
-            filepath = os.path.join('app/static/imgs/offers/', filename)
-            form.image.data.save(filepath)
+            filepath = os.path.join('static/imgs/offers/', filename)
+            form.image.data.save(os.path.join('app/', filepath)
         else:
             filepath = None
 

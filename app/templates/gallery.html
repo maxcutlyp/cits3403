@@ -23,16 +23,13 @@
 
     <div class="gallery-container">
         <h2>Offers</h2>
-        <!-- The container for the offer carousel -->
-        <div class="carousel-container">
-            {% for image in images %}
-            <!-- Each image should be wrapped in a single slide div -->
-            <div class="slide">
-                <img src="{{ url_for('static', filename=image.image_path) }}" alt="{{ image.title }}">
+            <div class="carousel-container">
+                {% for offer in offers %}
+                    <div class="slide" onclick="openModal('{{ offer.id }}')">
+                        <img src="{{ offer.image_path }}" alt="{{ offer.title }}">
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-
         <!-- JavaScript to manage the carousel navigation -->
         <script>
         const carouselContainer = document.querySelector(".carousel-container");
