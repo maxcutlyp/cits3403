@@ -13,7 +13,6 @@
     height: 80px;
     background-color: #cbcbcb;
     text-align: left;
-    grid-column: span 2;
 }
 
 .heading title {
@@ -82,6 +81,7 @@
     column-gap: 2%;
     row-gap: 20px;
     overflow-y: auto;
+    align-content: start;
 }
 
 .offer_grid .offer {
