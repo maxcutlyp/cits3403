@@ -71,7 +71,7 @@ const update_sidebar = async () => {
     document.getElementById('messages-sidebar').outerHTML = await resp.text()
 }
 
-const receive_message = async (message, user_id, display_name) => {
+function receive_message(message, user_id, display_name) {
     update_sidebar() // don't await, let it run in the background
 
     if (user_id !== talking_to()) {

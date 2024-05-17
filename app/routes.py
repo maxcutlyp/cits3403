@@ -395,14 +395,21 @@ def send_message(user_id: int, text_content: str):
         text_content=text_content,
     )
 
-    send(
-        {
-            'from': {
-                'id': current_user.id,
-                'display_name': current_user.display_name,
-            },
-            'message': text_content,
+    message_data = {
+        'from': {
+            'id': current_user.id,
+            'display_name': current_user.display_name,
         },
+        'message': text_content,
+    }
+
+    message_data['notification_html'] = flask.render_template(
+        'components/notification.html',
+        data=message_data
+    )
+
+    send(
+        message_data,
         json=True,
         room=user_id,
     )

@@ -1,0 +1,4 @@
+<a class="notification" href="{{ url_for('route_messages', user_id=data['from']['id']) }}">
+    <p class="notification-title">{{ data['from']['display_name'] }}</p>
+    <p class="notification-body">{{ data['message'] }}</p>
+</a>

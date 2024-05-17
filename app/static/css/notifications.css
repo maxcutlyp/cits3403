@@ -1,0 +1,52 @@
+#content {
+    position: relative;
+}
+
+#notifications-list {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    overflow-y: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    width: 40ch;
+}
+
+.notification {
+    display: block;
+
+    border-radius: 1em;
+    border-top-right-radius: 0;
+    padding: 1em;
+
+    color: #333;
+    background-color: #c2c2c2;
+
+    transition: opacity 1s linear;
+}
+
+.notification:hover {
+    color: inherit;
+    background-color: #a2a2a2;
+    text-decoration: none;
+}
+
+.notification.fadeout {
+    opacity: 0;
+}
+
+.notification p {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+
+    margin: 0;
+}
+
+.notification-title {
+    font-size: larger;
+    font-weight: bold;
+}
