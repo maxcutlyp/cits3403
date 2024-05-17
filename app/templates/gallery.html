@@ -77,13 +77,15 @@
                         <div class="col-md-6">
                             <h4 id="modalTitle"></h4>
                             <p id="modalDescription"></p>
-                            {% if artist.id != current_user.id %}
-                                <div class="contact">
-                                    <textarea placeholder="Message artist..." id="contact-artist-message"></textarea>
-                                    <input type="button" id="contact-artist-btn" class="button" value="Send (Ctrl+Enter)">
-                                </div>
-                            {% else %}
-                                {# TODO: Maybe an "edit offer" button? #}
+                            {% if current_user.is_authenticated %}
+                                {% if artist.id != current_user.id %}
+                                    <div class="contact">
+                                        <textarea placeholder="Message artist..." id="contact-artist-message"></textarea>
+                                        <input type="button" id="contact-artist-btn" class="button" value="Send (Ctrl+Enter)">
+                                    </div>
+                                {% else %}
+                                    {# TODO: Maybe an "edit offer" button? #}
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
