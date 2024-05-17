@@ -287,14 +287,6 @@ def get_recents_processed():
         .group_by(Message.user_from, Message.user_to)\
         .order_by(db.desc('timestamp'))\
         .all()
-    
-    received_messages = db.session.query(
-        Message.user_from,
-        Message.is_read,
-        )\
-        .filter((Message.user_to == current_user.id))\
-        .order_by(db.desc(Message.timestamp))\
-        .all()
 
     # `recents` contains both the most recent message sent from `current_user` to every
     # other user, and the most recent message sent from every other user to `current_user`,
@@ -318,16 +310,12 @@ def get_recents_processed():
         seen_pairs.add((message.user_to, message.user_from))
         i += 1
 
-    read_users = {msg.user_from: 1 for msg in received_messages}
-    for msg in received_messages:
-        read_users[msg.user_from] = min(read_users[msg.user_from], (msg.is_read == 1))
-
     recent_data = [
         {
             'user_id': (other_user_id := ({ message.user_from, message.user_to } - { current_user.id }).pop()),
             'display_name': User.query.get(other_user_id).display_name,
             'preview': message.text_content,
-            'is_read': read_users[other_user_id],
+            'is_read': message.is_read or message.user_from == current_user.id,
         }
         for message in recents
     ]
