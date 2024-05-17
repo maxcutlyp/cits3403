@@ -4,9 +4,7 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='gallery.js') }}"></script>
-    <script src="{{ url_for('static', filename='message-utils.js') }}"></script>
     <script>
         const isSelf = {{ (artist.id == current_user.id)|tojson }} {# tojson to turn True/False -> true/false #}
         const offer = {{ offers|tojson }}
@@ -77,13 +75,15 @@
                         <div class="col-md-6">
                             <h4 id="modalTitle"></h4>
                             <p id="modalDescription"></p>
-                            {% if artist.id != current_user.id %}
-                                <div class="contact">
-                                    <textarea placeholder="Message artist..." id="contact-artist-message"></textarea>
-                                    <input type="button" id="contact-artist-btn" class="button" value="Send (Ctrl+Enter)">
-                                </div>
-                            {% else %}
-                                {# TODO: Maybe an "edit offer" button? #}
+                            {% if current_user.is_authenticated %}
+                                {% if artist.id != current_user.id %}
+                                    <div class="contact">
+                                        <textarea placeholder="Message artist..." id="contact-artist-message"></textarea>
+                                        <input type="button" id="contact-artist-btn" class="button" value="Send (Ctrl+Enter)">
+                                    </div>
+                                {% else %}
+                                    {# TODO: Maybe an "edit offer" button? #}
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
