@@ -28,19 +28,6 @@ body {
     overflow-y: auto;
 }
 
-.heading {
-    background-color: #cbcbcb;
-    color: currentColor;
-    border-bottom: 1px solid gray;
-}
-
-.heading a {
-    background-color: #b7b7b7;
-}
-.heading a:hover {
-    background-color: #8e8e8e;
-}
-
 .sidebar > h1 {
     padding: 1rem 1rem;
     border-block-end: 1px solid grey;
