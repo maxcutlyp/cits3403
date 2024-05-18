@@ -363,15 +363,18 @@ def messages_sidebar():
     )
 
 @login_required
-def render_message(message_id: int):
+def render_message(message_id: int, for_user_id=None):
+    if for_user_id is None:
+        for_user_id = current_user.id
+
     message = Message.query.get(message_id)
 
-    if current_user.id not in (message.user_from, message.user_to):
+    if for_user_id not in (message.user_from, message.user_to):
         return 403, 'Not your message!'
 
     return flask.render_template(
         'components/message.html',
-        incoming=message.user_to == current_user.id,
+        incoming=message.user_to == for_user_id,
         text_content=message.text_content,
         timestamp=message_timestamp(message.timestamp),
         attachments=Attachment.query.filter_by(message_id=message_id),
@@ -462,7 +465,7 @@ def send_message(user_id: int, text_content: str, attachment_ids: list[int]):
         },
         'message': text_content,
         'attachments': [ attachment.id for attachment in valid_attachments ],
-        'message_html': render_message(message.id),
+        'message_html': render_message(message.id, for_user_id=user_id),
     }
 
     message_data['notification_html'] = flask.render_template(
