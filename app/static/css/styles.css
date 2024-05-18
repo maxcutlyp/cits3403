@@ -12,15 +12,20 @@ body, html {
     height: 80px;
     background-color: #cbcbcb;
     text-align: left;
+    border-bottom: 1px solid gray;
 }
 
-.heading title {
-    display: inline-block;
+.heading > .website-name {
     font-size: 40px;
-    padding: 10px;
+    float: left;
+    text-decoration: none;
+    color: currentColor;
+    padding-left: 1.2rem;
+    padding-top: 0.2rem;
+    font-family: system-ui;
 }
 
-.heading a {
+.heading > .nav-buttons {
     padding: 12px 20px 12px 20px;
     margin: 18px 25px 0px 0px;
     float: right;
@@ -31,7 +36,7 @@ body, html {
     border-radius: 5px;
 }
 
-.heading a:hover {
+.heading > .nav-buttons:hover {
     background-color: #8e8e8e;
 }
 
