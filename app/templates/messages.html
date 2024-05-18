@@ -19,18 +19,25 @@ Messages
     {% else %}
         <div class="messages">
             {% for message in messages %}
-            <p {% if message['incoming'] %} data-incoming {% else %} data-outgoing {% endif %}>
-                <span class="msg-contents">{{ message['contents'] }}</span>
-                <span class="msg-time">{{ message['timestamp'] }}</span>
-            </p>
-                
+                {% with
+                    incoming=message['incoming'],
+                    text_content=message['contents'],
+                    timestamp=message['timestamp'],
+                    attachments=message['attachments']
+                %}
+                    {% include 'components/message.html' %}
+                {% endwith %}
             {% endfor %}
         </div>
         <div class="message-controls">
             <pre id="message-input" placeholder="Message..." contenteditable></pre>
-            <input type="button" id="attach-btn" value="Attach">
+            <label for="attach-btn">Attach</label>
+            <input type="file" id="attach-btn" value="Attach">
             <input type="button" id="send-btn" value="Send (Ctrl+Enter)">
         </div>
+        <ul id="attachments" class="attachments in-draft">
+            <span>Attachments:</span>
+        </ul>
     {% endif %}
 </div>
 {% endblock %}

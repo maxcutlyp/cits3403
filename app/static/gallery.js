@@ -55,7 +55,7 @@ function sendMessageFromInput() {
         return
     }
 
-    send_message(message, selectedOffer.artist_id, () => {
+    send_message(message, [], selectedOffer.artist_id, () => {
         messageInput.hidden = true;
         messageInput.value = '';
         sendBtn.value = 'Sent!'

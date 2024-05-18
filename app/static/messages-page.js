@@ -1,3 +1,5 @@
+const attachments = new Set()
+
 const talking_to_or_null = () => {
     const to = Number.parseInt(window.location.pathname.split('/').pop())
     if (Number.isNaN(to)) {
@@ -24,43 +26,23 @@ const send_message_from_input = async () => {
         return
     }
 
-    var currentDate = new Date();
-
-    var hours = currentDate.getHours();
-    var minutes = currentDate.getMinutes();
-
-    add_message_to_chat(false, message, hours + ":" + minutes)
-
-    await send_message(message, talking_to(), update_sidebar)
+    await send_message(message, Array.from(attachments), talking_to(), (message_html) => {
+        update_sidebar()
+        add_message_to_chat(message_html)
+    })
 
     message_input.textContent = ''
+    attachments.clear()
+    for (const li of document.querySelectorAll('#attachments > li')) {
+        li.remove()
+    }
 }
 
-const add_message_to_chat = (incoming, message, timestamp) => {
-    // <p data-incoming|data-outgoing >
-    //     <span class="msg-contents">${message}</span>
-    //     <span class="msg-time">${timestamp}</span>
-    // </p>
-
-    const p = document.createElement('p')
-
-    if (incoming) {
-        p.dataset.incoming = ''
-    } else {
-        p.dataset.outgoing = ''
-    }
-
-    const msg_span = document.createElement('span')
-    msg_span.textContent = message
-    msg_span.classList.add("msg-contents")
-    p.appendChild(msg_span)
-
-    const time_span = document.createElement('span')
-    time_span.textContent = timestamp
-    time_span.classList.add("msg-time")
-    p.appendChild(time_span)
-
-    document.querySelector('.messages').prepend(p)
+const add_message_to_chat = (message_html) => {
+    const template = document.createElement('template')
+    template.innerHTML = message_html
+    const el = template.content.children[0]
+    document.querySelector('.messages').prepend(el)
 }
 
 const update_sidebar = async () => {
@@ -78,6 +60,32 @@ const update_sidebar = async () => {
     }
 
     document.getElementById('messages-sidebar').outerHTML = await resp.text()
+}
+
+const add_to_attachments = (file) => {
+    // <li>
+    //     <span>{filename}</span>
+    //     <input type="button" value="x">
+    // </li>
+
+    attachments.add(file)
+
+    const li = document.createElement('li')
+
+    const fname_span = document.createElement('span')
+    fname_span.innerText = file.name
+    li.appendChild(fname_span)
+
+    const delete_btn = document.createElement('input')
+    delete_btn.type = 'button'
+    delete_btn.value = 'x'
+    delete_btn.addEventListener('click', () => {
+        attachments.delete(file)
+        li.remove()
+    })
+    li.appendChild(delete_btn)
+
+    document.getElementById('attachments').appendChild(li)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -100,11 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
         message_input.addEventListener('paste', e => {
             if (e.clipboardData.files.length) {
                 e.preventDefault()
-                // TODO: Add to attachments
-                console.log("file(s) pasted")
+                for (const file of e.clipboardData.files) {
+                    add_to_attachments(file)
+                }
             }
         })
     }
+
+    document.getElementById('attach-btn').addEventListener('change', e => {
+        for (const file of e.target.files) {
+            add_to_attachments(file)
+        }
+        e.target.value = null
+    })
 
     // notifications.js will be loaded before this script. Its receive_message
     // will be overwritten by ours, but we actually want to keep it around so we
@@ -112,19 +128,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // they're currently looking at. Yes, this is very scuffed.
     const receive_message_as_notification = window.receive_message
 
-    window.receive_message = (message, user_id, display_name, notification_html) => {
+    window.receive_message = (
+        message,
+        attachments,
+        user_id,
+        display_name,
+        notification_html,
+        message_html,
+    ) => {
         update_sidebar() // don't await, let it run in the background
 
         if (user_id !== talking_to_or_null()) {
-            receive_message_as_notification(message, user_id, display_name, notification_html)
+            receive_message_as_notification(
+                message,
+                attachments,
+                user_id,
+                display_name,
+                notification_html,
+                message_html,
+            )
             return
         }
 
-        var currentDate = new Date();
-
-        var hours = currentDate.getHours();
-        var minutes = currentDate.getMinutes();
-
-        add_message_to_chat(true, message, hours + ":" + minutes)
+        add_message_to_chat(message_html)
     }
 })
