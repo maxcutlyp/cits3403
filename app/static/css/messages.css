@@ -90,6 +90,7 @@ body {
 .messages-wrapper {
     display: grid;
     grid-template-rows: 1fr auto;
+    grid-template-columns: 100%;
     overflow-y: auto;
 }
 
@@ -114,6 +115,9 @@ body {
     padding: 0.5em;
     color: var(--_msg-color);
     background-color: var(--_msg-bg);
+
+    overflow-wrap: anywhere;
+    white-space: break-spaces;
 }
 
 .messages span.msg-time {
@@ -138,9 +142,10 @@ body {
     padding: 0.5em;
     display: flex;
     gap: 0.5em;
+    align-items: baseline;
 }
 
-.message-controls * {
+.message-controls > * {
     padding: 1em;
     border-radius: 0.5em;
     border: none;
@@ -149,6 +154,18 @@ body {
 
 #message-input {
     flex-grow: 1;
+
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+
+    overflow-wrap: anywhere;
+    white-space: break-spaces;
+}
+
+#message-input:empty::before {
+  content: attr(placeholder);
+  opacity: 0.5;
 }
 
 .empty-notifier {

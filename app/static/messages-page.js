@@ -18,7 +18,7 @@ const talking_to = () => {
 
 const send_message_from_input = async () => {
     const message_input = document.getElementById('message-input')
-    const message = message_input.value
+    const message = message_input.textContent
 
     if (message.length <= 0) {
         return
@@ -33,7 +33,7 @@ const send_message_from_input = async () => {
 
     await send_message(message, talking_to(), update_sidebar)
 
-    message_input.value = ''
+    message_input.textContent = ''
 }
 
 const add_message_to_chat = (incoming, message, timestamp) => {
@@ -82,11 +82,29 @@ const update_sidebar = async () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('send-btn')?.addEventListener('click', send_message_from_input)
-    document.getElementById('message-input')?.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-            send_message_from_input()
-        }
-    })
+    const message_input = document.getElementById('message-input')
+    if (message_input) {
+        message_input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                send_message_from_input()
+            }
+        })
+
+        message_input.addEventListener('input', e => {
+            if (e.target.textContent === '') {
+                // Get rid of the pesky <br> that prevents it from being :empty
+                e.target.lastElementChild?.remove()
+            }
+        })
+
+        message_input.addEventListener('paste', e => {
+            if (e.clipboardData.files.length) {
+                e.preventDefault()
+                // TODO: Add to attachments
+                console.log("file(s) pasted")
+            }
+        })
+    }
 
     // notifications.js will be loaded before this script. Its receive_message
     // will be overwritten by ours, but we actually want to keep it around so we
@@ -109,5 +127,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
         add_message_to_chat(true, message, hours + ":" + minutes)
     }
-
 })
