@@ -224,6 +224,7 @@ def add_offer():
     if form.validate_on_submit():
         if form.image.data:
             filename = secure_filename(form.image.data.filename)
+            os.makedirs('app/static/imgs/offers/', exist_ok=True)
             filepath = os.path.join('imgs/offers/', filename)
             form.image.data.save(os.path.join('app/static/', filepath))
         else:
