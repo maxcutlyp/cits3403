@@ -50,11 +50,16 @@ class Message(db.Model):
     timestamp = db.Column(db.DateTime, nullable=False)
     text_content = db.Column(db.Text, nullable=False)
     is_read = db.Column(db.Integer, nullable=False, default=0)
-    # TODO: attachments e.g. images
 
     __table_args__ = (
         db.CheckConstraint('user_from != user_to'),
     )
+
+class Attachment(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    filename = db.Column(db.String)
+    # nullable as we upload attachments and create messages separately
+    message_id = db.Column(db.Integer, db.ForeignKey('message.id'), nullable=True)
 
 class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

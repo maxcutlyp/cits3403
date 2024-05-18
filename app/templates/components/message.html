@@ -1,0 +1,10 @@
+<p {% if incoming %} data-incoming {% else %} data-outgoing {% endif %}>
+    <span class="msg-contents">{{ text_content }}</span>
+    <span class="msg-time">{{ timestamp }}</span>
+    {% for attachment in attachments %}
+        {# TODO #}
+        <a href="{{ url_for('get_message_attachment', attachment_id=attachment.id) }}">{{
+            attachment.filename
+        }}</a>
+    {% endfor %}
+</p>

@@ -8,7 +8,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_socketio import send, join_room
 
 from . import app, db, login, socketio
-from .models import User, Session, Image, Message, Offer, Tag
+from .models import User, Session, Image, Message, Offer, Tag, Attachment
 from .forms import LoginForm, SignupForm, ImageUploadForm, EditPersonalDetails, OfferForm
 from werkzeug.utils import secure_filename
 
@@ -132,17 +132,12 @@ def route_messages(user_id: int | None):
         
         db.session.commit()
 
-        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        day_endings = ["st", "nd", "rd"] + ["th" for _ in range(28)]
-
-        curr_day = datetime.datetime.now().day
-        curr_month = datetime.datetime.now().month
-
         messages_processed = [
             {
                 'contents': msg.text_content,
                 'incoming': msg.user_to == current_user.id,
-                'timestamp': f"{msg.timestamp.hour}:{msg.timestamp.minute:02}" if (msg.timestamp.day == curr_day and msg.timestamp.month == curr_month) else f"{msg.timestamp.day}{day_endings[msg.timestamp.day - 1]} {months[msg.timestamp.month]}"
+                'timestamp': message_timestamp(msg.timestamp),
+                'attachments': Attachment.query.filter_by(message_id=msg.id),
             }
             for msg in messages
         ]
@@ -156,6 +151,15 @@ def route_messages(user_id: int | None):
         messages=messages_processed,
         selected=user_id,
     )
+
+def message_timestamp(timestamp: datetime.datetime):
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    day_endings = ["st", "nd", "rd"] + ["th"] * 28
+
+    if timestamp.date() == datetime.datetime.today().date():
+        return f"{timestamp.hour}:{timestamp.minute:02}"
+
+    return f"{timestamp.day}{day_endings[timestamp.day - 1]} {months[timestamp.month]}"
 
 @app.route('/gallery/', defaults={'artistID': None})
 @app.route('/gallery/<int:artistID>')
@@ -357,6 +361,60 @@ def messages_sidebar():
         selected=selected,
     )
 
+@login_required
+def render_message(message_id: int):
+    message = Message.query.get(message_id)
+
+    if current_user.id not in (message.user_from, message.user_to):
+        return 403, 'Not your message!'
+
+    return flask.render_template(
+        'components/message.html',
+        incoming=message.user_to == current_user.id,
+        text_content=message.text_content,
+        timestamp=message_timestamp(message.timestamp),
+        attachments=Attachment.query.filter_by(message_id=message_id),
+    )
+
+@app.route('/attachments', methods=['POST'])
+@login_required
+def add_message_attachment():
+    files = [ file for _, file in flask.request.files.items(multi=True) ]
+    print(files)
+    attachments = [ Attachment(filename=file.filename) for file in files ]
+    db.session.add_all(attachments)
+    db.session.commit()
+
+    # Note: not storing in /static because we only want auth'd users to access them.
+    # (See get_message_attachment())
+    folder_path = os.path.join(app.instance_path, 'attachments')
+    os.makedirs(folder_path, exist_ok=True)
+
+    ids = []
+    for file, attachment in zip(files, attachments):
+        db.session.refresh(attachment)
+        ids.append(attachment.id)
+
+        # This probably becomes problematic if someone uploads a very large file.
+        file.save(os.path.join(folder_path, str(attachment.id)))
+
+    return ids, 200
+
+@app.route('/attachments/<int:attachment_id>', methods=['GET'])
+@login_required
+def get_message_attachment(attachment_id: int):
+    attachment = Attachment.query.get_or_404(attachment_id)
+    message = Message.query.get(attachment.message_id)
+
+    if current_user.id not in (message.user_from, message.user_to):
+        return 403, 'Not your attachment!'
+
+    return flask.send_file(
+        os.path.join(app.instance_path, 'attachments', str(attachment_id)),
+        as_attachment=True,
+        download_name=attachment.filename,
+    )
+
 @socketio.on('connect')
 @login_required
 def ws_connect():
@@ -367,15 +425,16 @@ def ws_connect():
 def ws_json(data: dict, *args):
     user_to = data.get('to', None)
     message = data.get('message', None)
+    attachments = data.get('attachments', None)
 
-    if user_to is None or message is None:
+    if None in (user_to, message, attachments):
         print(f'Got unknown json data from socket: {data}')
         return
 
-    send_message(user_to, message)
+    return render_message(send_message(user_to, message, attachments))
 
 @login_required
-def send_message(user_id: int, text_content: str):
+def send_message(user_id: int, text_content: str, attachment_ids: list[int]):
     message = Message(
         user_from=current_user.id,
         user_to=user_id,
@@ -383,12 +442,26 @@ def send_message(user_id: int, text_content: str):
         text_content=text_content,
     )
 
+    db.session.add(message)
+    db.session.flush()
+    db.session.refresh(message)
+
+    valid_attachments = []
+    for attachment_id in attachment_ids:
+        attachment = Attachment.query.get(attachment_id)
+        if attachment.message_id is None:
+            attachment.message_id = message.id
+            valid_attachments.append(attachment)
+    db.session.commit()
+
     message_data = {
         'from': {
             'id': current_user.id,
             'display_name': current_user.display_name,
         },
         'message': text_content,
+        'attachments': [ attachment.id for attachment in valid_attachments ],
+        'message_html': render_message(message.id),
     }
 
     message_data['notification_html'] = flask.render_template(
@@ -402,5 +475,4 @@ def send_message(user_id: int, text_content: str):
         room=user_id,
     )
 
-    db.session.add(message)
-    db.session.commit()
+    return message.id

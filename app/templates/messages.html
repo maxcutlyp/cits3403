@@ -19,11 +19,14 @@ Messages
     {% else %}
         <div class="messages">
             {% for message in messages %}
-            <p {% if message['incoming'] %} data-incoming {% else %} data-outgoing {% endif %}>
-                <span class="msg-contents">{{ message['contents'] }}</span>
-                <span class="msg-time">{{ message['timestamp'] }}</span>
-            </p>
-                
+                {% with
+                    incoming=message['incoming'],
+                    text_content=message['contents'],
+                    timestamp=message['timestamp'],
+                    attachments=message['attachments']
+                %}
+                    {% include 'components/message.html' %}
+                {% endwith %}
             {% endfor %}
         </div>
         <div class="message-controls">
