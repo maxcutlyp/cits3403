@@ -10,8 +10,9 @@ const receive_message = (message, user_id, display_name, notification_html) => {
 - display_name: string: display name of the sending user
 - notification_html: string: rendered HTML for a notification (for use with notifications.js)
 
-To send messages, call `send_message(message, user_id, server_ack)`
+To send messages, call `send_message(message, attachments, user_id, server_ack)`
 - message: string: text content of the message to send
+- attachments: iterable: list of File objects to attach to the message
 - user_id: int: ID of the user to send the message to
 - server_ack (optional): function to be called when the server acknowledges the message (see https://socket.io/docs/v4/client-api/#socketemiteventname-args)
 
@@ -19,7 +20,8 @@ To send messages, call `send_message(message, user_id, server_ack)`
 
 let socket
 
-const send_message = (message, user_id, server_ack) => {
+const send_message = (message, attachments, user_id, server_ack) => {
+    // TODO: attachments
     socket.emit('json',
         {
             'to': user_id,

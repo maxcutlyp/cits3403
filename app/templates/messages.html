@@ -28,9 +28,13 @@ Messages
         </div>
         <div class="message-controls">
             <pre id="message-input" placeholder="Message..." contenteditable></pre>
-            <input type="button" id="attach-btn" value="Attach">
+            <label for="attach-btn">Attach</label>
+            <input type="file" id="attach-btn" value="Attach">
             <input type="button" id="send-btn" value="Send (Ctrl+Enter)">
         </div>
+        <ul id="attachments">
+            <span>Attachments:</span>
+        </ul>
     {% endif %}
 </div>
 {% endblock %}

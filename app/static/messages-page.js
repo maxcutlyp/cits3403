@@ -1,3 +1,5 @@
+const attachments = new Set()
+
 const talking_to_or_null = () => {
     const to = Number.parseInt(window.location.pathname.split('/').pop())
     if (Number.isNaN(to)) {
@@ -31,7 +33,7 @@ const send_message_from_input = async () => {
 
     add_message_to_chat(false, message, hours + ":" + minutes)
 
-    await send_message(message, talking_to(), update_sidebar)
+    await send_message(message, attachments, talking_to(), update_sidebar)
 
     message_input.textContent = ''
 }
@@ -80,6 +82,32 @@ const update_sidebar = async () => {
     document.getElementById('messages-sidebar').outerHTML = await resp.text()
 }
 
+const add_to_attachments = (file) => {
+    // <li>
+    //     <span>{filename}</span>
+    //     <input type="button" value="x">
+    // </li>
+
+    attachments.add(file)
+
+    const li = document.createElement('li')
+
+    const fname_span = document.createElement('span')
+    fname_span.innerText = file.name
+    li.appendChild(fname_span)
+
+    const delete_btn = document.createElement('input')
+    delete_btn.type = 'button'
+    delete_btn.value = 'x'
+    delete_btn.addEventListener('click', () => {
+        attachments.delete(file)
+        li.remove()
+    })
+    li.appendChild(delete_btn)
+
+    document.getElementById('attachments').appendChild(li)
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('send-btn')?.addEventListener('click', send_message_from_input)
     const message_input = document.getElementById('message-input')
@@ -100,11 +128,19 @@ document.addEventListener('DOMContentLoaded', () => {
         message_input.addEventListener('paste', e => {
             if (e.clipboardData.files.length) {
                 e.preventDefault()
-                // TODO: Add to attachments
-                console.log("file(s) pasted")
+                for (const file of e.clipboardData.files) {
+                    add_to_attachments(file)
+                }
             }
         })
     }
+
+    document.getElementById('attach-btn').addEventListener('change', e => {
+        for (const file of e.target.files) {
+            add_to_attachments(file)
+        }
+        e.target.value = null
+    })
 
     // notifications.js will be loaded before this script. Its receive_message
     // will be overwritten by ours, but we actually want to keep it around so we

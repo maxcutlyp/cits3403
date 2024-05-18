@@ -143,6 +143,7 @@ body {
     display: flex;
     gap: 0.5em;
     align-items: baseline;
+    overflow-y: auto;
 }
 
 .message-controls > * {
@@ -150,6 +151,14 @@ body {
     border-radius: 0.5em;
     border: none;
     background-color: var(--accent-secondary);
+    margin: 0;
+}
+
+#attach-btn {
+    display: none;
+}
+[for="attach-btn"] {
+    cursor: pointer;
 }
 
 #message-input {
@@ -161,11 +170,55 @@ body {
 
     overflow-wrap: anywhere;
     white-space: break-spaces;
+
+    overflow-y: auto;
+    max-height: 100%;
 }
 
 #message-input:empty::before {
   content: attr(placeholder);
   opacity: 0.5;
+}
+
+#attachments {
+    list-style: none;
+    margin: 0;
+    padding-inline: 1em;
+    padding-block: 0 0.5em;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+
+    overflow-y: auto;
+}
+
+#attachments:not(:has(li)) {
+    display: none;
+}
+
+#attachments > span {
+    padding-block: 0.5em;
+}
+
+#attachments > li {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+
+    background-color: color-mix(in hsl, Canvas, grey 20%);
+    border-radius: 0.5rem;
+    padding: 0.5em 1em;
+}
+
+#attachments > li > input {
+    border: none;
+    border-radius: 0.5em;
+    padding-inline: 0.5rem;
+}
+
+#attachments > li > span {
+    cursor: default;
 }
 
 .empty-notifier {
