@@ -38,8 +38,7 @@
 
 .sidebar {
     padding: 0.75rem;
-    background-color: #111312;
-    color: #cbcbcb;
+    background-color: #f5f5f5;
     overflow-y: auto;
     gap: 0.5rem;
 }
@@ -131,7 +130,6 @@
 }
 
 .background{
-    background-color: #1E1E1E;
     font-family: system-ui;
 
     display: grid;
