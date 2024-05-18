@@ -2,15 +2,13 @@
     margin-top: 100px;
 }
 .background{
-    background-color: #1E1E1E;
 }
 .text{
-    color: #C9C8B9;
     font-family:Tahoma, sans-serif;
 }
 .box{
     border-radius: 2%;
-    background: #8D3484;
+    background-color: #f5f5f5;
     border-color: #E9B023;
 }
 .input-box{
@@ -18,10 +16,10 @@
     border: 0;
 }
 input[type="submit"] {
-    background: #E9B023;
+    background: #8e8e8e;
     margin-top: 3px;
     border: 0;
-    border-radius: 2%;
+    border-radius: 5px;
 }
 .error {
     background-color: red;
