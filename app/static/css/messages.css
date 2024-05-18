@@ -89,15 +89,18 @@ body {
     flex-direction: column-reverse; /* to default the scroll position to the bottom */
 }
 
-.messages p {
+.messages > * {
     max-width: 60%;
     display: flex;
     flex-direction: column;
     row-gap: 2px;
 }
 
-.messages span.msg-contents {
-    display: inline-block;
+.messages .msg-contents {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
     border-radius: 0.5em;
     padding: 0.5em;
     color: var(--_msg-color);
@@ -107,17 +110,17 @@ body {
     white-space: break-spaces;
 }
 
-.messages span.msg-time {
+.messages .msg-time {
     font-size: 0.6rem;
 }
 
-.messages p[data-incoming] {
+.messages [data-incoming] {
     align-self: start;
     align-items: start;
     --_msg-bg: var(--accent-secondary);
 }
 
-.messages p[data-outgoing] {
+.messages [data-outgoing] {
     align-self: end;
     align-items: end;
     --_msg-bg: var(--accent-primary);
@@ -167,48 +170,72 @@ body {
   opacity: 0.5;
 }
 
-#attachments {
+.attachments {
     list-style: none;
     margin: 0;
-    padding-inline: 1em;
-    padding-block: 0 0.5em;
 
     display: flex;
     flex-wrap: wrap;
+}
+
+.attachments.in-draft {
     gap: 1em;
+    padding-inline: 1em;
+    padding-block: 0 0.5em;
 
     overflow-y: auto;
 }
 
-#attachments:not(:has(li)) {
+.attachments.in-message {
+    gap: 0.5em;
+    padding: 0;
+}
+
+.attachments:not(:has(li)) {
     display: none;
 }
 
-#attachments > span {
+.attachments.in-draft > span {
     padding-block: 0.5em;
 }
 
-#attachments > li {
+.attachments > li {
     display: flex;
     gap: 0.5em;
     align-items: center;
 
-    background-color: color-mix(in hsl, Canvas, grey 20%);
     border-radius: 0.5rem;
+}
+
+.attachments.in-draft > li {
+    background-color: color-mix(in hsl, Canvas, grey 20%);
     padding: 0.5em 1em;
 }
 
-#attachments > li > input {
+.attachments.in-message > li {
+    border: 1px solid currentColor;
+}
+
+.attachments.in-draft > li > input {
     border: none;
     border-radius: 0.5em;
     padding-inline: 0.5rem;
+    background-color: inherit;
+}
+.attachments.in-draft > li > input:hover {
+    background-color: #cbcbcb;
 }
 
-#attachments > li > span {
+
+.attachments.in-draft > li > span {
     cursor: default;
+}
+
+.attachments.in-message a {
+    color: currentColor;
+    padding: 0.5em 1em;
 }
 
 .empty-notifier {
     place-self: center;
 }
-
