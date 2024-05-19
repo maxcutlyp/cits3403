@@ -2,11 +2,29 @@
 
 ## Quick start
 
+1. Ensure you have Python 3.10 or later installed.
+2. Install dependencies
 ```console
-$ pip install -r requirements.txt
-$ export FLASK_SECRET_KEY=$(python -c 'import secrets; print(secrets.token_hex())')
-$ flask db upgrade # setup database
-$ python -m app
+pip install -r requirements.txt
+```
+
+3. Set a secret key
+- bash/zsh
+```console
+export FLASK_SECRET_KEY=$(python -c 'import secrets; print(secrets.token_hex())')
+```
+- PowerShell
+```powershell
+$env:FLASK_SECRET_KEY = $(python -c 'import secrets; print(secrets.token_hex())')
+```
+
+4. Setup the database
+```console
+flask db upgrade
+```
+5. Run the app
+```console
+python -m app
 ```
 
 ## Test data
