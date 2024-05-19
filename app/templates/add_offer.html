@@ -1,33 +1,36 @@
 {% extends "base.html" %}
 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile-form.css') }}">
+{% endblock %}
+
 {% block content %}
     <h1>Add a New Offer</h1>
     <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div>
-            {{ form.title.label }}<br>
-            {{ form.title(size=32) }}<br>
+            {{ form.title.label }}
+            {{ form.title(size=32) }}
             {% for error in form.title.errors %}
                 <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.description.label }}<br>
-            {{ form.description(rows=4) }}<br>
+            {{ form.description.label }}
+            {{ form.description(rows=4) }}
             {% for error in form.description.errors %}
                 <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.image.label }}<br>
-            {{ form.image() }}<br>
+            {{ form.image() }}
             {% for error in form.image.errors %}
                 <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.tag.label }}<br>
-            {{ form.tag() }}<br>
+        <div class="inline">
+            {{ form.tag.label }}
+            {{ form.tag() }}
         </div>
         <div>
             {{ form.submit() }}

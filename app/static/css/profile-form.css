@@ -1,0 +1,25 @@
+#content {
+    display: grid;
+    justify-content: center;
+    margin: 2em;
+}
+
+label {
+    margin: 0;
+}
+
+#content form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    margin-block: 1em 0.5em;
+}
+
+#content form > div.inline {
+    flex-direction: row;
+    gap: 1em;
+}
+
+.inline > :not(label) {
+    flex: 1;
+}
