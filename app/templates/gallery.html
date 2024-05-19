@@ -14,7 +14,7 @@
 {% block content %}
     <div id="sidebar">
         <div class="profile-picture">
-            <img src="{{ url_for('static', filename='imgs/profiles/' +  artist.id|string  + '.jpg' ) }}">
+            <img src="{{ url_for('static', filename='imgs/profiles/' +  artist.id|string ) }}">
         </div>
         <h2>{{ artist.display_name }}</h2>
         <h4>{{ artist.artist_title }}</h4>
