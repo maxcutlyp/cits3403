@@ -21,6 +21,7 @@
 <body>
     <header class="heading">
                 {% if current_user.is_authenticated %}
+                    <a class="nav-buttons" href="/logout">Logout</a></li>
                     <a class="nav-buttons" href="/messages">Messages</a>
                     <a class="nav-buttons" href="/gallery">My Gallery</a></li>
                 {% else %}
