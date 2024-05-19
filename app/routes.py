@@ -282,13 +282,13 @@ def edit_profile():
         user_details.artist_description = form.description.data if form.description.data else current_user.artist_description
         if form.image.data:
             type = form.image.data.content_type
-            filename = secure_filename(str(current_user.id)) + '.' + type.split('/')[1] 
+            filename = str(current_user.id)
             os.makedirs('app/static/imgs/profiles/', exist_ok=True)
             filepath = os.path.join('imgs/profiles/', filename)
             form.image.data.save(os.path.join('app/static/', filepath))
         db.session.commit()
 
-        return flask.redirect(flask.url_for('gallery'))
+        return flask.redirect(flask.url_for('my_gallery'))
 
     return flask.render_template('edit_details.html', form=form)
 
