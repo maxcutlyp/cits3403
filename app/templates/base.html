@@ -25,7 +25,7 @@
                     <a class="nav-buttons" href="/messages">Messages</a>
                     <a class="nav-buttons" href="/gallery">My Gallery</a></li>
                 {% else %}
-                    <a class="nav-buttons" href="/login">Log In</a>
+                    <a class="nav-buttons" href="{{ url_for('login', next=request.path) }}">Log In</a>
                 {% endif %}
                 <a class="website-name" href="/">Artify</a>
     </header>
