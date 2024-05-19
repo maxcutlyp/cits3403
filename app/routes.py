@@ -258,14 +258,14 @@ def add_offer():
             description=form.description.data,
             image_path=filepath,
             # form_path=form.form_path.data
-            min_price=0.0,
+            min_price=form.price.data,
             max_price=0.0, #SET LATER
             tag_id=form.tag.data
         )
         db.session.add(offer)
         db.session.commit()
         flask.flash('Your offer has been created!', 'success')
-        return flask.redirect(flask.url_for('gallery'))
+        return flask.redirect(flask.url_for('my_gallery'))
     return flask.render_template('add_offer.html', title='Add Offer', form=form, tags=tag_list)
 
 @app.route('/edit_details', methods=['GET', 'POST'])
