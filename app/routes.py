@@ -274,19 +274,17 @@ def edit_profile():
     form = EditPersonalDetails()
 
     if form.validate_on_submit():
-        if form.image.data:
-            filename = secure_filename(form.image.data.filename)
-            os.makedirs('app/static/imgs/profiles/', exist_ok=True)
-            filepath = os.path.join('imgs/profiles/', filename)
-            form.image.data.save(os.path.join('app/static/', filepath))
 
         user_details = User.query.get(current_user.id)
 
         user_details.display_name = form.name.data if form.name.data else current_user.display_name
         user_details.artist_title = form.title.data if form.title.data else current_user.artist_title
         user_details.artist_description = form.description.data if form.description.data else current_user.artist_description
-        user_details.profile_picture = filepath if form.image.data else current_user.profile_picture
-
+        if form.image.data:
+            filename = user_details.id
+            os.makedirs('app/static/imgs/profiles/', exist_ok=True)
+            filepath = os.path.join('imgs/profiles/', filename)
+            form.image.data.save(os.path.join('app/static/', filepath))
         db.session.commit()
 
         return flask.redirect(flask.url_for('gallery'))
