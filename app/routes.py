@@ -3,6 +3,7 @@ import os
 import datetime
 import time
 import base64
+import urllib
 
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_socketio import send, join_room
@@ -47,6 +48,12 @@ def index():
     
     return flask.render_template('index.html', tags=tag_names, offers=offers)
 
+def valid_url(url: str | None):
+    if url is None:
+        return True
+
+    parsed = urllib.parse.urlparse(url)
+    return parsed.scheme == '' and parsed.netloc in ('', flask.request.host)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -61,8 +68,11 @@ def login():
 
         login_user(user)
 
-        # TODO: "next" param (like in flask-login docs)
-        return flask.redirect(flask.url_for('index'))
+        nxt = flask.request.args.get('next')
+        if not valid_url(nxt):
+            return flask.abort(400)
+
+        return flask.redirect(nxt or flask.url_for('index'))
 
     error = flask.session.pop('last_err', None)
     return flask.render_template('login.html', form=form, error=error)
@@ -87,8 +97,11 @@ def signup():
 
         login_user(user)
 
-        # TODO: "next" param
-        return flask.redirect(flask.url_for('index'))
+        nxt = flask.request.args.get('next')
+        if not valid_url(nxt):
+            return flask.abort(400)
+
+        return flask.redirect(nxt or flask.url_for('index'))
 
     error = flask.session.pop('last_err', None)
     return flask.render_template('signup.html', form=form, error=error)
@@ -98,8 +111,11 @@ def signup():
 def logout():
     logout_user()
 
-    # TODO: "next" param
-    return flask.redirect(flask.url_for('index'))
+    nxt = flask.request.args.get('next')
+    if not valid_url(nxt):
+        return flask.abort(400)
+
+    return flask.redirect(nxt or flask.url_for('index'))
 
 @app.route('/messages/')
 @login_required
@@ -161,12 +177,13 @@ def message_timestamp(timestamp: datetime.datetime):
 
     return f"{timestamp.day}{day_endings[timestamp.day - 1]} {months[timestamp.month]}"
 
-@app.route('/gallery/', defaults={'artistID': None})
+@app.route('/gallery/')
+@login_required
+def my_gallery():
+    return gallery(current_user.id)
+
 @app.route('/gallery/<int:artistID>')
 def gallery(artistID):
-    if artistID is None:
-        artistID = current_user.id
-
     offers = Offer.query.filter_by(artist_id=artistID).all()
     offers_data = [offer.to_dict() for offer in offers]
     images = Image.query.filter_by(artist_id=artistID).all()
