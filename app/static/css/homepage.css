@@ -60,12 +60,14 @@
 .offer_grid {
     padding-inline: 2rem;
     padding-block: 2rem;
-    display: grid;
+    display: flex;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 2%;
     row-gap: 20px;
     overflow-y: auto;
     align-content: start;
+    flex-wrap: wrap;
+    align-items: start;
 }
 
 .offer_grid .offer {
@@ -73,6 +75,8 @@
     background-color: #cbcbcb;
     border-radius: 5px;
     text-decoration: none;
+    flex: 1 1 40ch;
+    max-width: 50ch;
 }
 
 .offer:hover {
