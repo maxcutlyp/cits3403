@@ -228,7 +228,7 @@ def upload_image():
                 flash('No file selected.', 'error')
         else:
             flash('You must be logged in to upload images.', 'error')
-        return flask.redirect(flask.url_for('gallery'))
+        return flask.redirect(flask.url_for('my_gallery'))
 
 
     return flask.render_template('upload_image.html', form=form)
