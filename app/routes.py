@@ -281,7 +281,8 @@ def edit_profile():
         user_details.artist_title = form.title.data if form.title.data else current_user.artist_title
         user_details.artist_description = form.description.data if form.description.data else current_user.artist_description
         if form.image.data:
-            filename = secure_filename(str(current_user.id)) + ".png"
+            type = form.image.data.content_type
+            filename = secure_filename(str(current_user.id)) + '.' + type.split('/')[1] 
             os.makedirs('app/static/imgs/profiles/', exist_ok=True)
             filepath = os.path.join('imgs/profiles/', filename)
             form.image.data.save(os.path.join('app/static/', filepath))
