@@ -240,7 +240,7 @@ def add_offer():
     
     form = OfferForm()
 
-    form.tag.choices = [(tag.id, tag.name) for tag in tag_list]
+    form.tag.choices = [('', '(No tag)')] + [(tag.id, tag.name) for tag in tag_list]
 
     if form.validate_on_submit():
         if form.image.data:
@@ -260,7 +260,7 @@ def add_offer():
             # form_path=form.form_path.data
             min_price=form.price.data,
             max_price=0.0, #SET LATER
-            tag_id=form.tag.data
+            tag_id=form.tag.data if form.tag.data else None,
         )
         db.session.add(offer)
         db.session.commit()
