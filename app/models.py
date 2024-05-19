@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), index=True, unique=True)
     display_name = db.Column(db.String(64), nullable=False)
     hashed_password = db.Column(db.String(128))
+    profile_picture = db.Column(db.String(100)) #Path to the user's profile picture
     artist_title = db.Column(db.String(128)) # Used only by artist users to store their "MO"
     artist_description = db.Column(db.Text) # Used only by artist users to store a text description of themselves.
 
