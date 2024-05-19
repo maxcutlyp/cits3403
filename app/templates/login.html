@@ -7,7 +7,7 @@
     <body class = "background">
         <div class = "container align-items-center h-50 align-middle vertical-buff">
             <div>
-                <p class = "text-center text">[name of website here]</p>
+                <h1 class = "text-center text">Artify</h1>
             </div>
             <div class = "container box border w-50 p-3">
                 {% if error %}
@@ -25,7 +25,7 @@
                     {{ form.password(class_='container input-box') }}
                     <br>
                     {{ form.submit() }}
-                    <p class = "text">Sign up <a href="{{ url_for('signup') }}">here!</a> </p>
+                    <p class = "text">Sign up <a href="{{ url_for('signup', next=request.args.get('next')) }}">here!</a> </p>
                 </form>
             </div>
         </div>
