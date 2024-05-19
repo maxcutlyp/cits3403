@@ -104,8 +104,6 @@
 }
 
 .background{
-    font-family: system-ui;
-
     display: grid;
     grid-template-rows: auto 1fr;
     height: 100vh;
